@@ -3,8 +3,8 @@
 <?php
     session_start();
 
-    $_SESSION['cd_pessoa'] = 1;
-    $_SESSION['senha_pessoa'] = "asd,123";
+    //$_SESSION['cd_pessoa'] = 1;
+    //$_SESSION['senha_pessoa'] = "asd,123";
     
     if(!isset($_SESSION['cd_pessoa']))
     {
@@ -59,12 +59,6 @@
   <link rel="stylesheet" href="../../css/style.css">
   <!-- endinject -->
   
-
-
-  <script>
-    document.getElementById("c_body").style = '<?php echo $_SESSION['c_body'];?>';
-    document.getElementById("c_card").style = '<?php echo $_SESSION['c_card'];?>';
-  </script>
   
 
 </head>
@@ -104,7 +98,7 @@
                     //echo '<h1>Módulo Hospedagem!</h1>';
                     //echo '<h6>&nbsp&nbsp&nbsp&nbsp Licença ao módulo de controle de casas voltado a pessoas que alugam casas e espaços.</h6>';
                     
-                    include '../../pages/md_hospedagem/index.php';
+                    include '../../pages/md_casa/index.php';
                     //include '../../pages/md_patrimonio/index.php';
                   
 

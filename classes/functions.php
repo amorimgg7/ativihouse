@@ -31,10 +31,9 @@ class Usuario
             $_SESSION['cd_pessoa'] = $colab['cd_pessoa'];
             $_SESSION['email_pessoa'] = $colab['email_pessoa'];
             $_SESSION['senha_pessoa'] = $colab['senha_pessoa'];
-            $_SESSION['pnome_pessoa'] = $colab['pnome_colab'];
-            $_SESSION['snome_pessoa'] = $colab['snome_colab'];
-            $_SESSION['foto_pessoa'] = $colab['foto_colab'];
-            $sql1 = $pdo->prepare("SELECT * FROM rel_user WHERE cd_colab = ".$_SESSION['cd_colab']."");
+            $_SESSION['pnome_pessoa'] = $colab['pnome_pessoa'];
+            $_SESSION['snome_pessoa'] = $colab['snome_pessoa'];
+            $sql1 = $pdo->prepare("SELECT * FROM rel_user WHERE cd_pessoa = ".$_SESSION['cd_pessoa']."");
             $sql1->execute();
 
             if($sql1->rowCount() == 0){

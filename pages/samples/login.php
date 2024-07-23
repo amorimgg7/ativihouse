@@ -38,37 +38,14 @@
             -->
               <?php
                 header('Content-Type: text/html; charset=UTF-8');
-
-                require_once '../../classes/conn_revenda.php';
-                /*
-                  SELECT * FROM tb_frases 
-                  WHERE (data_inicio_frase <= CURDATE() AND data_fim_frase >= CURDATE())  
-                  AND (dia_inicio <= DAYOFMONTH(NOW()) AND dia_fim >= DAYOFMONTH(NOW())) 
-                */
-                $select_frase = "SELECT * FROM tb_frases WHERE (data_inicio_frase <= CURDATE() AND data_fim_frase >= CURDATE()) AND (dia_inicio <= DAYOFMONTH(NOW()) AND dia_fim >= DAYOFMONTH(NOW())) order by prioridade_frase DESC";  
-                $result_frase = mysqli_query($conn_revenda, $select_frase);
-                $row_frase = mysqli_fetch_assoc($result_frase);
-                if($row_frase) {
-                  //echo '<h4>"'. utf8_encode($row_frase['texto_frase']) .'"</h4>';
-
-                  //echo '<h4>"'. htmlspecialchars($row_frase['texto_frase'], ENT_QUOTES, 'UTF-8') .'"</h4>';
-
-                  echo '<h4>"'.htmlspecialchars($row_frase['texto_frase']).'"</h4>';
-
-                  //echo '<h4>"'.$row_frase['texto_frase'].'"</h4>';
-                  echo '<h6 class="font-weight-light">'.htmlspecialchars($row_frase['autor_frase'], ENT_QUOTES, 'UTF-8') .' ('.htmlspecialchars($row_frase['vida_autor'], ENT_QUOTES, 'UTF-8') .')</h6>';               
-                }
+                require_once '../../classes/conn.php';
               ?>
               <form class="pt-3" method="POST">
-                
-                <div class="form-group">
-                  <input type="tel" class="form-control form-control-lg" id="cnpj_empresa" maxlength="14" name="cnpj_empresa" placeholder="Digite seu CNPJ" required>
+                <div class="form-outline mb-4">
+                  <input type="email" class="form-control" id="email_pessoa" name="email_pessoa" placeholder="Digite seu E-Mail">
                 </div>
                 <div class="form-outline mb-4">
-                  <input type="email" class="form-control" id="email_colab" name="email_colab" placeholder="Digite seu E-Mail">
-                </div>
-                <div class="form-outline mb-4">
-                  <input type="password" class="form-control" id="senha_colab" name="senha_colab" placeholder="Senha">
+                  <input type="password" class="form-control" id="senha_pessoa" name="senha_pessoa" placeholder="Senha">
                 </div>
 
                 <div class="mt-3">
@@ -98,16 +75,14 @@
 
 
               <?php
-                if (isset($_POST['cnpj_empresa']))
+                if (isset($_POST['email_pessoa']) && isset($_POST['senha_pessoa']))
                 {
                   require_once '../../classes/functions.php';
                   $u = new Usuario;
                   
-                  $cnpj_empresa = addslashes($_POST['cnpj_empresa']);
-                  $_SESSION['cnpj_empresa'] = $cnpj_empresa;
-                  $email_colab = addslashes($_POST['email_colab']);
-                  $senha_colab = addslashes($_POST['senha_colab']);
-                  if (!empty($email_colab) && !empty($senha_colab)) 
+                  $email_pessoa = addslashes($_POST['email_pessoa']);
+                  $senha_pessoa = addslashes($_POST['senha_pessoa']);
+                  if (!empty($email_pessoa) && !empty($senha_pessoa)) 
                   {
                     
                     ?>
@@ -119,7 +94,7 @@
                     {
                       include("../../partials/load.html");
                       //echo "<script>window.alert('Sem erro');</script>";
-                      if($u->logar($cnpj_empresa, $email_colab, $senha_colab))  
+                      if($u->logar($email_pessoa, $senha_pessoa))  
                       {
 
                         
@@ -133,7 +108,7 @@
                       else
                       {
                         ?>
-                          <div class="msg-erro">CPF ou senha incorretos!</div>
+                          <div class="msg-erro">Email ou senha incorretos!</div>
                         <?php
                         //echo "<script>alert('Login errado!'); setTimeout(function() { window.location.reload(); }, 3000);</script>";
                         //echo "<script>alert('Login errado!'); setTimeout(function() { window.history.back(); }, 3000);</script>";
@@ -172,19 +147,16 @@
   </div>
   <script>
 function submitForm() {
-  var cnpj = document.getElementById("cnpj_empresa").value;
-  var email = document.getElementById("email_colab").value;
-  var password = document.getElementById("senha_colab").value;
+  var email = document.getElementById("email_pessoa").value;
+  var password = document.getElementById("senha_pessoa").value;
   var rememberMe = document.getElementById("rememberMe").checked;
   
   if (rememberMe) {
-    localStorage.setItem("cnpj_empresa", cnpj);
-    localStorage.setItem("email_colab", email);
-    localStorage.setItem("senha_colab", password);
+    localStorage.setItem("email_pessoa", email);
+    localStorage.setItem("senha_pessoa", password);
   } else {
-    localStorage.removeItem("cnpj_empresa");
-    localStorage.removeItem("email_colab");
-    localStorage.removeItem("senha_colab");
+    localStorage.removeItem("email_pessoa");
+    localStorage.removeItem("senha_pessoa");
   }
   
   // código para verificar o nome de usuário e a senha aqui
@@ -194,15 +166,13 @@ function submitForm() {
 
 // preencher os campos do formulário com as informações salvas, se houver
 window.onload = function() {
-  var savedCnpj = localStorage.getItem("cnpj_empresa");
-  var savedEmail = localStorage.getItem("email_colab");
-  var savedPassword = localStorage.getItem("senha_colab");
+  var savedEmail = localStorage.getItem("email_pessoa");
+  var savedPassword = localStorage.getItem("senha_pessoa");
   
   // Verificar se os campos salvos existem antes de atribuir os valores a eles
   if (savedCnpj && savedEmail && savedPassword) {
-    document.getElementById("cnpj_empresa").value = savedCnpj;
-    document.getElementById("email_colab").value = savedEmail;
-    document.getElementById("senha_colab").value = savedPassword;
+    document.getElementById("email_pessoa").value = savedEmail;
+    document.getElementById("senha_pessoa").value = savedPassword;
     document.getElementById("rememberMe").checked = true;
   }
 }
