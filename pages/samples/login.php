@@ -170,7 +170,7 @@ window.onload = function() {
   var savedPassword = localStorage.getItem("senha_pessoa");
   
   // Verificar se os campos salvos existem antes de atribuir os valores a eles
-  if (savedCnpj && savedEmail && savedPassword) {
+  if (savedEmail && savedPassword) {
     document.getElementById("email_pessoa").value = savedEmail;
     document.getElementById("senha_pessoa").value = savedPassword;
     document.getElementById("rememberMe").checked = true;

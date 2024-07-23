@@ -1,7 +1,6 @@
 
-<div class="row mt-3">
-            <div class="col-xl-3 flex-column d-flex grid-margin stretch-card">
-              <div class="row flex-grow">       
+<div class="card-deck">
+    
                 <?php
                   $sql_casa = "SELECT * FROM tb_casa";
                   $resulta_casa = $conn->query($sql_casa);
@@ -19,10 +18,10 @@
                           })
                           .catch(error => console.error('Erro:', error));
                         }
-                        setInterval(updateContent1, 1000);
+                        setInterval(updateContent1, 100000);
                         window.onload = updateContent1;
                       </script>
-                      <div style="width:100%;" id="content1"><h1>Carregando #1...</h1></div>
+                      <div style="width:100" class="typeahead" id="content1" style="display: inline-block; column-break-inside: avoid;   "><h1>Carregando #1...</h1></div>
                     <?php
 
                       
@@ -89,31 +88,5 @@
                     }
                   }
                 ?>
-              </div>
-            </div>
+             
           </div>
-
-
-          
-
-
-<?php
-
-
-
-
-
-              if(isset($livre) > 0){
-                echo '<script>document.getElementById("livre").innerHTML = "Para Hoje</br>'.$livre.'";</script>';
-                echo '<script>document.getElementById("livre").style.display = "block";</script>';
-              }
-              if($preparando > 0){
-                echo '<script>document.getElementById("preparando").innerHTML = "No Prazo</br>'.$preparando.'";</script>';
-                echo '<script>document.getElementById("preparando").style.display = "block";</script>';
-              }
-              if($ocupado > 0){
-                echo '<script>document.getElementById("ocupado").innerHTML = "ocupado</br>'.$ocupado.'";</script>';
-                echo '<script>document.getElementById("ocupado").style.display = "block";</script>';
-              }
-              
-            ?>

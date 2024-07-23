@@ -3,8 +3,8 @@
 <?php
     session_start();
 
-    //$_SESSION['cd_pessoa'] = 1;
-    //$_SESSION['senha_pessoa'] = "asd,123";
+    $_SESSION['cd_pessoa'] = 1;
+    $_SESSION['senha_pessoa'] = "asd,123";
     
     if(!isset($_SESSION['cd_pessoa']))
     {
@@ -92,7 +92,7 @@
           </div>
           <div class="row mt-3">
             <div class="col-xl-3 flex-column d-flex grid-margin stretch-card">
-              <div class="row flex-grow">
+              <!--<div class="row flex-grow">-->
                 <?php
                   
                     //echo '<h1>Módulo Hospedagem!</h1>';
@@ -106,7 +106,7 @@
                   
 
                 ?>
-              </div>
+              <!--</div>-->
             </div>
           </div>
 
