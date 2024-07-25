@@ -43,6 +43,9 @@
                       echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Parametros">';
                       //echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="#2">';
                       echo '</form>';
+                      
+                      
+                      
                       //echo '<a href="'.$_SESSION['dominio'].'/pages/md_hospedagem/editar_casa.php?cd_casa='.$casas['cd_casa'].'" class="btn btn-outline-success btn-lg btn-block">Parametros</a>';
                       echo '</div>';
                       echo '</div>';

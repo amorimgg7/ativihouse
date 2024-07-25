@@ -18,7 +18,7 @@
                           })
                           .catch(error => console.error('Erro:', error));
                         }
-                        setInterval(updateContent1, 100000);
+                        setInterval(updateContent1, 3000);
                         window.onload = updateContent1;
                       </script>
                       <div style="width:100" class="typeahead" id="content1" style="display: inline-block; column-break-inside: avoid;   "><h1>Carregando #1...</h1></div>

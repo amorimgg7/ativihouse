@@ -48,31 +48,20 @@
         }
       }
 
-      echo '<div class="container">';
-echo '<div class="row justify-content-center">'; // Flex container to align cards horizontally
-
-for ($i = 1; $i <= 8; $i++) {
-    if ($_SESSION['canal_' . $i] > 0) {
-        echo '<div class="col-6 col-md-3 mb-3">'; // Each card takes up a fraction of the row's width
-        echo '<div class="card text-center">'; // Center text inside the card
-        echo '<form method="POST">';
-        //echo '<div>';
-        echo '<p class="mb-2">Canal ' . $i . ' - ' . $_SESSION['canal_' . $i] . '</p>';
-        if ($_SESSION['canal_' . $i] == 2) {
+      for ($i = 1; $i <= 8; $i++) {
+        if ($_SESSION['canal_' . $i] > 0) {
+          echo '<form method="POST">';
+          echo '<div class="col">';
+          echo '<p class="mb-2">Canal ' . $i . ' - ' . $_SESSION['canal_' . $i] . '</p>';
+          if ($_SESSION['canal_' . $i] == 2) {
             echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="1">';
             echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-info">';
-        } else {
+          } else {
             echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="2">';
             echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-dark">';
+          }
+          echo '</div>';
+          echo '</form>';
         }
-        //echo '</div>';
-        echo '</form>';
-        echo '</div>';
-        echo '</div>';
-    }
-}
-
-echo '</div>';
-echo '</div>';
-
+      } 
 ?>
