@@ -55,13 +55,13 @@
             <!--<p>Setor: <?php //echo $_SESSION['cd_setor'];?></p>-->
             <!--<p>Função: <?php //echo $_SESSION['cd_funcao'];?></p>-->
           </div>
-<!--
+
         </div>
         <ul class="nav">
           <li class="nav-item">
             <a class="nav-link" href="<?php //echo $_SESSION['dominio'];?>/pages/dashboard">
               <i class="icon-box menu-icon" ></i>
-              <span class="menu-title" >Dashboard</span>
+              <span class="menu-title" >Início</span>
             </a>
           </li>
           

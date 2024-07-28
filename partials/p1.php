@@ -2,7 +2,7 @@
 <?php 
     session_start();  
     
-    require_once '../../classes/conn.php';
+    require_once '../classes/conn.php';
 ?><!--Validar sessão aberta, se usuário está logado.-->
 
 <?php
@@ -51,25 +51,55 @@
       echo '<div class="container">';
 echo '<div class="row justify-content-center">'; // Flex container to align cards horizontally
 
-for ($i = 1; $i <= 8; $i++) {
-    if ($_SESSION['canal_' . $i] > 0) {
-        echo '<div class="col-6 col-md-3 mb-3">'; // Each card takes up a fraction of the row's width
-        echo '<div class="card text-center">'; // Center text inside the card
-        echo '<form method="POST">';
-        //echo '<div>';
-        echo '<p class="mb-2">Canal ' . $i . ' - ' . $_SESSION['canal_' . $i] . '</p>';
-        if ($_SESSION['canal_' . $i] == 2) {
-            echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="1">';
-            echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-info">';
-        } else {
-            echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="2">';
-            echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-dark">';
+if($row_dispositivo['modelo_dispositivo'] == "Luzes_2_0"){
+    for ($i = 1; $i <= 8; $i++) {
+        if ($_SESSION['canal_' . $i] > 0) {
+            echo '<div class="col-6 col-md-3 mb-3">'; // Each card takes up a fraction of the row's width
+            echo '<div class="card text-center">'; // Center text inside the card
+            echo '<form method="POST">';
+            //echo '<div>';
+            echo '<p class="mb-2">Canal ' . $i . ' - ' . $_SESSION['canal_' . $i] . '</p>';
+            if ($_SESSION['canal_' . $i] == 2) {
+                echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="1">';
+                echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-info">';
+            } else {
+                echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="2">';
+                echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-dark">';
+            }
+            //echo '</div>';
+            echo '</form>';
+            echo '</div>';
+            echo '</div>';
         }
-        //echo '</div>';
-        echo '</form>';
-        echo '</div>';
-        echo '</div>';
     }
+}else if($row_dispositivo['modelo_dispositivo'] == "Higrometro_1_0"){
+    echo '<div class="col-6 col-md-3 mb-3">'; // Each card takes up a fraction of the row's width
+    echo '<div class="card text-center">'; // Center text inside the card
+    //echo '<form method="POST">';
+    //echo '<div>';
+    echo '<p class="mb-2">Canal 1 - ' . $_SESSION['canal_1'] . '</p>';
+    
+    echo '<input style="display:none;" type="text" id="btncanal_1" name="btncanal_1">';
+    echo '<input type="submit" value="'. $row_dispositivo['canal_1'] .'°C" class="btn btn-info">';
+    
+    //echo '</div>';
+    //echo '</form>';
+    echo '</div>';
+    echo '</div>'; 
+
+    echo '<div class="col-6 col-md-3 mb-3">'; // Each card takes up a fraction of the row's width
+    echo '<div class="card text-center">'; // Center text inside the card
+    //echo '<form method="POST">';
+    //echo '<div>';
+    echo '<p class="mb-2">Canal 2 - ' . $_SESSION['canal_2'] . '</p>';
+    
+    echo '<input style="display:none;" type="text" id="btncanal_2" name="btncanal_1">';
+    echo '<input type="submit" value="'. $row_dispositivo['canal_2'] .'%" class="btn btn-info">';
+    
+    //echo '</div>';
+    //echo '</form>';
+    echo '</div>';
+    echo '</div>'; 
 }
 
 echo '</div>';

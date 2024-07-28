@@ -2,7 +2,7 @@
 <?php 
     session_start();  
     
-    require_once '../../classes/conn.php';
+    require_once '../classes/conn.php';
 ?><!--Validar sessão aberta, se usuário está logado.-->
 
 

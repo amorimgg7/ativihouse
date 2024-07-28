@@ -168,7 +168,7 @@
                     ?>
                       <script>
                         function updateContent1() {
-                          fetch('p1.php')
+                          fetch('../../partials/p1.php')
                           .then(response => response.text())
                           .then(data => {
                             document.getElementById('content1').innerHTML = data;

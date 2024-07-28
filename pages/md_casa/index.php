@@ -11,7 +11,7 @@
                       ?>
                       <script>
                         function updateContent1() {
-                          fetch('p2.php')
+                          fetch('../../partials/p2.php')
                           .then(response => response.text())
                           .then(data => {
                             document.getElementById('content1').innerHTML = data;
