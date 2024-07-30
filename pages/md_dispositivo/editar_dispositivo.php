@@ -29,6 +29,8 @@
   <!-- endinject -->
   <script src="../../js/functions.js"></script>
   <link rel="shortcut icon" />
+
+  
 </head>
 
 <body onmousemove="resetTimer()" onclick="resetTimer()" onkeypress="resetTimer()">
@@ -122,10 +124,10 @@
                     echo '<div class="nc-form-tac">';
                     //echo '<form method="POST" id="alter_dispositivo" name="alter_dispositivo">';
                     echo '<div class="typeahead" style="display: block;">';
-                    
+                    /*
                     echo '<label for="btncd_dispositivo">Código do Dispositivo</label>';
                     echo '<input value="'.$_SESSION['cd_dispositivo'].'" type="tel" name="btncd_dispositivo" id="btncd_dispositivo" class="form-control form-control-sm" readonly>';
-/*
+
                     echo '<label for="btncd_casa_dispositivo">Código da Casa do Dispositivo</label>';
                     echo '<input value="'.$_SESSION['cd_casa_dispositivo'].'" type="tel" name="btncd_casa_dispositivo" id="btncd_casa_dispositivo" class="form-control form-control-sm" readonly>';
 */
@@ -165,7 +167,11 @@
 
                     //echo "<meta http-equiv='refresh' content='1;url=".$_SESSION['dominio']."pages/md_hospedagem/p1.php'>";//<meta http-equiv="refresh" content="1;url=https://www.novapagina.com">
 
-                    ?>
+
+                    // Carregar a biblioteca Chart.js
+    
+
+?>
                       <script>
                         function updateContent1() {
                           fetch('../../partials/p1.php')
@@ -175,10 +181,150 @@
                           })
                           .catch(error => console.error('Erro:', error));
                         }
-                        setInterval(updateContent1, 3000);
+                        setInterval(updateContent1, 1000);
                         window.onload = updateContent1;
                       </script>
                       <div style="width:100%;" id="content1"><h1>Carregando #1...</h1></div>
+                    <?php
+                      echo '<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
+    
+    // Estrutura HTML para os gráficos
+    echo '<div class="row">
+            <div class="col-sm-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Temperatura</h4>
+                  <canvas id="lineChart_temperatura"></canvas>
+                </div>
+              </div>
+            </div>
+          <!--</div>
+          <div class="row">-->
+            <div class="col-sm-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Umidade</h4>
+                  <canvas id="lineChart_umidade"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--<div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Bar chart</h4>
+                  <canvas id="barChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>-->';
+    
+    // Consultar dados do banco de dados
+    //$sql_clima_tempo = "SELECT temperatura_clima_tempo AS media_temperatura, umidade_clima_tempo AS media_umidade FROM clima_tempo WHERE mac_dispositivo_clima_tempo = '".$row_dispositivo['mac_dispositivo']."' order by dt_clima_tempo desc limit 1000";
+    
+    $sql_clima_tempo = "SELECT 
+    DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:00:00') AS hora,
+    ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
+    ROUND(AVG(umidade_clima_tempo), 2) AS media_umidade
+FROM 
+    clima_tempo
+WHERE 
+    mac_dispositivo_clima_tempo = '".$row_dispositivo['mac_dispositivo']."' 
+    AND dt_clima_tempo >= NOW() - INTERVAL 24 HOUR
+GROUP BY 
+    DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:00:00')
+ORDER BY 
+    hora ASC
+LIMIT 24";
+
+    $resulta_clima_tempo = $conn->query($sql_clima_tempo);
+    
+    $temperaturas = [];
+    $umidades = [];
+    
+    if ($resulta_clima_tempo->num_rows > 0) {
+        while ($clima_tempo = $resulta_clima_tempo->fetch_assoc()) {
+            $temperaturas[] = $clima_tempo["media_temperatura"];
+            $umidades[] = $clima_tempo["media_umidade"];
+        }
+    }
+    ?>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Função para criar gráficos
+        function createChart(ctx, type, labels, datasets) {
+            return new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    
+        // Dados fornecidos pelo PHP
+        var temperaturas = <?php echo json_encode($temperaturas); ?>;
+        var umidades = <?php echo json_encode($umidades); ?>;
+        var labels = Array.from({length: temperaturas.length}, (_, i) => i + 1); // Usando índices como rótulos
+    
+        // Configuração dos datasets
+        var temperatureDataset = {
+            label: 'Temperatura',
+            data: temperaturas,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            fill: false
+        };
+    
+        var humidityDataset = {
+            label: 'Umidade',
+            data: umidades,
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1,
+            fill: false
+        };
+    
+        // Gráfico de linha
+        var ctxLineTemp = document.getElementById('lineChart_temperatura').getContext('2d');
+        var temperatureBarDataset = {
+            ...temperatureDataset,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)'
+        };
+        createChart(ctxLineTemp, 'line', labels, [temperatureDataset]);
+
+
+        var ctxLineUmid = document.getElementById('lineChart_umidade').getContext('2d');
+        var humidityBarDataset = {
+            ...humidityDataset,
+            backgroundColor: 'rgba(255, 159, 64, 0.2)'
+        };
+        createChart(ctxLineUmid, 'line', labels, [humidityDataset]);
+    
+        // Gráfico de barra
+        /*
+        var ctxBar = document.getElementById('barChart').getContext('2d');
+        var temperatureBarDataset = {
+            ...temperatureDataset,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)'
+        };
+        var humidityBarDataset = {
+            ...humidityDataset,
+            backgroundColor: 'rgba(255, 159, 64, 0.2)'
+        };
+        createChart(ctxBar, 'bar', labels, [temperatureBarDataset, humidityBarDataset]);
+        */
+    });
+    </script>
+                    
                     <?php
 
 
@@ -270,11 +416,7 @@
               </div>
             </div>
           </div>
-        
-     
-    
-  
-
+      
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <?php
@@ -288,7 +430,7 @@
   </div>
   <!-- container-scroller -->
   <!-- base:js -->
-  <script src="../../vendors/base/vendor.bundle.base.js"></script>
+  
   <!-- endinject -->
   <!-- inject:js -->
   <script src="../../js/off-canvas.js"></script>

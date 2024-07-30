@@ -107,6 +107,8 @@
                         echo ' <p>canal_2 editado</p> ';
                         $alterado = 1;
                     }
+                    
+                    
                 }
                 if($alterado == 0){
                     $update = "UPDATE tb_dispositivo SET 
@@ -118,6 +120,24 @@
                     if(mysqli_query($conn, $update)){                    
                         echo ' <p>OnLine</p> ';
                         $alterado = 1;
+                    }
+                }else{
+                    if($row_dispositivo['modelo_dispositivo'] = "Higrometro_1_0"){
+/*
+                        $valor_referencia = 1.0;
+                        if ((abs($canal_2 - $valor_referencia) < 0.5) || (abs($canal_2 - $valor_referencia) < 0.5)) {
+                            echo $canal_2.' - '.$valor_referencia.'<p>maior ou menor que 0,5</p>';
+                        }
+*/
+                        $insert_clima_tempo = "INSERT INTO clima_tempo (dt_clima_tempo, mac_dispositivo_clima_tempo, temperatura_clima_tempo, umidade_clima_tempo) VALUES(
+                        '".$data_hora."',
+                        '".$mac."',
+                        '".$canal_1."',
+                        '".$canal_2."'
+                        )";
+                        if(mysqli_query($conn, $insert_clima_tempo)){
+                            echo ' <p>Inserindo Temperatura e Umidade</p> ';
+                        }
                     }
                 }
                 
