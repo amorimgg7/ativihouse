@@ -59,13 +59,13 @@
         </div>
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="<?php //echo $_SESSION['dominio'];?>/pages/dashboard">
+            <a class="nav-link" href="<?php echo $_SESSION['dominio'];?>/pages/dashboard">
               <i class="icon-box menu-icon" ></i>
               <span class="menu-title" >Início</span>
             </a>
           </li>
           
-
+<!--
           <li class="nav-item" <?php //echo $_SESSION['md_fornecedor'];?>>
             <a class="nav-link" data-toggle="collapse" href="#cliente_comercial" aria-expanded="false" aria-controls="cliente_comercial">
               <i class="icon-disc menu-icon"></i>

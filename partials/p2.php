@@ -52,6 +52,8 @@ if ($resulta_casa->num_rows > 0) {
         echo '<p class="card-title">IP - '.$casas['ip_dispositivo'].'</p>';
         echo '<p class="card-title">MAC - '.$casas['mac_dispositivo'].'</p>';
         echo '</div>';
+
+        
         echo '<div class="card-footer text-muted">';
         if (($dataAtual - $dataStatus) > 10) {
             //echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/editar_dispositivo.php">';
@@ -60,10 +62,18 @@ if ($resulta_casa->num_rows > 0) {
             echo '<input class="btn btn-outline-danger btn-lg btn-block" type="submit" value="Acionar suporte">';
             echo '</form>';
         } else {
+            
             echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/editar_dispositivo.php">';
+            if($casas['modelo_dispositivo'] == "Higrometro_1_0"){
+                echo '<input value="'. $casas['canal_1'] .'°C" class="btn mb-3 btn-block btn-sm btn-info">';
+                echo '<input value="'. $casas['canal_2'] .'%" class="btn mb-3 btn-block btn-sm btn-info">';
+            }
+            
             echo '<input type="text" id="concd_dispositivo" name="concd_dispositivo" value="'.$casas['cd_dispositivo'].'" style="display:none;">';
             echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Parametros">';
+            
             echo '</form>';
+            
         }
         
 

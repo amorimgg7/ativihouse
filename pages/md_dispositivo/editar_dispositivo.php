@@ -26,9 +26,6 @@
   <!-- endinject -->
   <!-- inject:css -->
   <link rel="stylesheet" href="../../css/style.css">
-  <!-- endinject -->
-  <script src="../../js/functions.js"></script>
-  <link rel="shortcut icon" />
 
   
 </head>
@@ -188,40 +185,55 @@
                     <?php
                       echo '<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
     
-    // Estrutura HTML para os gráficos
+
+                      if($_SESSION['modelo_dispositivo'] == "Higrometro_1_0" ){
+
+                        // Estrutura HTML para os gráficos
     echo '<div class="row">
-            <div class="col-sm-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Temperatura</h4>
-                  <canvas id="lineChart_temperatura"></canvas>
-                </div>
-              </div>
-            </div>
-          <!--</div>
-          <div class="row">-->
-            <div class="col-sm-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Umidade</h4>
-                  <canvas id="lineChart_umidade"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--<div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Bar chart</h4>
-                  <canvas id="barChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>-->';
+    <div class="col-sm-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Temperatura</h4>
+          <canvas id="lineChart_temperatura"></canvas>
+        </div>
+      </div>
+    </div>
+  <!--</div>
+  <div class="row">-->
+    <div class="col-sm-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Umidade</h4>
+          <canvas id="lineChart_umidade"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Temperatura e Umidade</h4>
+          <canvas id="lineChart2"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Bar chart</h4>
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>-->';
+                      }
+    
     
     // Consultar dados do banco de dados
-    //$sql_clima_tempo = "SELECT temperatura_clima_tempo AS media_temperatura, umidade_clima_tempo AS media_umidade FROM clima_tempo WHERE mac_dispositivo_clima_tempo = '".$row_dispositivo['mac_dispositivo']."' order by dt_clima_tempo desc limit 1000";
+    $sql_clima_tempo2 = "SELECT temperatura_clima_tempo AS media_temperatura, umidade_clima_tempo AS media_umidade FROM clima_tempo WHERE mac_dispositivo_clima_tempo = '".$row_dispositivo['mac_dispositivo']."' order by dt_clima_tempo asc limit 1000";
     
     $sql_clima_tempo = "SELECT 
     DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:00:00') AS hora,
@@ -238,7 +250,11 @@ ORDER BY
     hora ASC
 LIMIT 24";
 
-    $resulta_clima_tempo = $conn->query($sql_clima_tempo);
+
+
+
+$resulta_clima_tempo = $conn->query($sql_clima_tempo);
+$resulta_clima_tempo2 = $conn->query($sql_clima_tempo2);
     
     $temperaturas = [];
     $umidades = [];
@@ -247,6 +263,16 @@ LIMIT 24";
         while ($clima_tempo = $resulta_clima_tempo->fetch_assoc()) {
             $temperaturas[] = $clima_tempo["media_temperatura"];
             $umidades[] = $clima_tempo["media_umidade"];
+        }
+    }
+
+    $temperaturas2 = [];
+    $umidades2 = [];
+    
+    if ($resulta_clima_tempo2->num_rows > 0) {
+        while ($clima_tempo2 = $resulta_clima_tempo2->fetch_assoc()) {
+            $temperaturas2[] = $clima_tempo2["media_temperatura"];
+            $umidades2[] = $clima_tempo2["media_umidade"];
         }
     }
     ?>
@@ -309,19 +335,41 @@ LIMIT 24";
         };
         createChart(ctxLineUmid, 'line', labels, [humidityDataset]);
     
-        // Gráfico de barra
-        /*
-        var ctxBar = document.getElementById('barChart').getContext('2d');
-        var temperatureBarDataset = {
-            ...temperatureDataset,
+
+
+        // Dados fornecidos pelo PHP
+        var temperaturas2 = <?php echo json_encode($temperaturas2); ?>;
+        var umidades2 = <?php echo json_encode($umidades2); ?>;
+        var labels2 = Array.from({length: temperaturas2.length}, (_, i) => i + 1); // Usando índices como rótulos
+    
+        // Configuração dos datasets
+        var temperatureDataset2 = {
+            label: 'Temperatura',
+            data: temperaturas2,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            fill: false
+        };
+    
+        var humidityDataset2 = {
+            label: 'Umidade',
+            data: umidades2,
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1,
+            fill: false
+        };
+    
+        // Gráfico de linha
+        var ctxLine2 = document.getElementById('lineChart2').getContext('2d');
+        var temperatureBarDataset2 = {
+            ...temperatureDataset2,
             backgroundColor: 'rgba(75, 192, 192, 0.2)'
         };
-        var humidityBarDataset = {
-            ...humidityDataset,
+        var humidityBarDataset2 = {
+            ...humidityDataset2,
             backgroundColor: 'rgba(255, 159, 64, 0.2)'
         };
-        createChart(ctxBar, 'bar', labels, [temperatureBarDataset, humidityBarDataset]);
-        */
+        createChart(ctxLine2, 'line', labels2, [temperatureDataset2, humidityDataset2]);
     });
     </script>
                     
@@ -347,24 +395,7 @@ LIMIT 24";
                           }
                       }
                     }
-/*
-                    for ($i = 1; $i <= 8; $i++) {
-                      if ($_SESSION['canal_' . $i] > 0) {
-                        echo '<form method="POST">';
-                        echo '<div class="col">';
-                        echo '<p class="mb-2">Canal ' . $i . ' - ' . $_SESSION['canal_' . $i] . '</p>';
-                        if ($_SESSION['canal_' . $i] == 2) {
-                          echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="1">';
-                          echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-info">';
-                        } else {
-                          echo '<input style="display:none;" type="text" id="btncanal_' . $i . '" name="btncanal_' . $i . '" value="2">';
-                          echo '<input type="submit" value="Canal ' . $i . '" class="btn btn-dark">';
-                        }
-                        echo '</div>';
-                        echo '</form>';
-                      }
-                    }
-*/
+
                     echo '</form>';
 
 
@@ -381,35 +412,7 @@ LIMIT 24";
                   }
                 ?>
                 
-                </div>
-                <div class="card" >
                 
-
-
-
-                
-
-              <?php
-              //    if(isset($_POST['consulta'])) {
-              //      // Consulta o usuário pelo CPF
-              //      $sql_os = "SELECT * FROM tb_servico WHERE cd_servico = '".$_POST['conos_servico']."'";
-              //      $result_os = mysqli_query($conn, $sql_os);
-              //      $row_os = mysqli_fetch_assoc($result_os);
-
-              //      // Exibe as informações do usuário no formulário
-              //      if($row_os) {
-              //        $_SESSION['os_servico'] = $_POST['conos_servico'];
-              //        // Consulta o usuário pelo CPF
-              //      }
-
-
-              //    }
-
-
-                    
-                ?>
-                
-              </div>
 
                 
 
@@ -420,7 +423,7 @@ LIMIT 24";
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <?php
-          include("../../partials/_footer.php");
+          //include("../../partials/_footer.php");
         ?>
         <!-- partial -->
       </div>
