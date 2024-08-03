@@ -20,7 +20,7 @@
                   //$sql_casa = "SELECT *, UNIX_TIMESTAMP(dt_status_dispositivo) DIV 60 AS time_group FROM tb_dispositivo WHERE cd_casa_dispositivo = " . $_SESSION['cd_casa'] . " ORDER BY dt_status_dispositivo DESC, time_group, dt_status_dispositivo";
 
 
-$sql_casa = "SELECT * FROM tb_dispositivo where cd_casa_dispositivo = ".$_SESSION['cd_casa']." ";
+$sql_casa = "SELECT * FROM tb_dispositivo where modelo_dispositivo != 'Higrometro_1_0' AND cd_casa_dispositivo = ".$_SESSION['cd_casa']." ";
 $resulta_casa = $conn->query($sql_casa);
 if ($resulta_casa->num_rows > 0) {
     while ($casas = $resulta_casa->fetch_assoc()) {

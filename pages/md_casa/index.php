@@ -1,6 +1,5 @@
 
 <div class="card-deck">
-    
                 <?php
                   $sql_casa = "SELECT * FROM tb_casa";
                   $resulta_casa = $conn->query($sql_casa);
