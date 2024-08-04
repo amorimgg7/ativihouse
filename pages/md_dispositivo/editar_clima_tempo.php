@@ -115,7 +115,7 @@ if (isset($_SESSION['casa'])) {
             GROUP BY 
                 DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:%i:00')
             ORDER BY 
-                minuto ASC
+                minuto DESC
             LIMIT 60;";
 
             $sql_clima_tempo_24H = "SELECT 
@@ -130,7 +130,7 @@ if (isset($_SESSION['casa'])) {
                                 GROUP BY 
                                     DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:00:00')
                                 ORDER BY 
-                                    hora ASC
+                                    hora DESC
                                 LIMIT 24";
 
             $resulta_clima_tempo_1H = $conn->query($sql_clima_tempo_1H);
