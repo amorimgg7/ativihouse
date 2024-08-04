@@ -169,13 +169,10 @@ ALTER TABLE `rel_user`
 
 CREATE TABLE clima_tempo (
   `dt_clima_tempo` DATETIME NOT NULL,
-  `cd_dispositivo_clima_tempo` int(11) NOT NULL,
+  `mac_dispositivo_clima_tempo` int(11) NOT NULL,
   `temperatura_clima_tempo` varchar(40),
   `umidade_clima_tempo` varchar(40)
 )  DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 ALTER TABLE clima_tempo
-  ADD KEY fk_clima_tempo (`cd_dispositivo_clima_tempo`);
-
-  ALTER TABLE clima_tempo
-  ADD CONSTRAINT `fk_clima_tempo`   FOREIGN KEY (`cd_dispositivo_clima_tempo`)   REFERENCES `tb_dispositivo`  (`cd_dispositivo`);
+  ADD KEY fk_clima_tempo (`mac_dispositivo_clima_tempo`);

@@ -3,8 +3,8 @@
 <?php
     session_start();
 
-    $_SESSION['cd_pessoa'] = 1;
-    $_SESSION['senha_pessoa'] = "asd,123";
+    //$_SESSION['cd_pessoa'] = 1;
+    //$_SESSION['senha_pessoa'] = "asd,123";
     
     if(!isset($_SESSION['cd_pessoa']))
     {
@@ -43,7 +43,7 @@
   <!--<meta http-equiv="refresh" content="5;url=../samples/lock-screen.php">-->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-  <title>AtiviSoft</title>
+  <title>AtiviHouse</title>
   <!-- base:css -->
   <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../../vendors/feather/feather.css">
@@ -69,17 +69,16 @@
     <!-- partial:partials/_navbar.html -->
     <?php include ("../../partials/_navbar.php");?>
     <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
+    <!--<div class="container-fluid page-body-wrapper">-->
+    <div>
       <!-- partial:partials/_sidebar.html -->
       <?php include ("../../partials/_sidebar.php");?>
       <!-- partial -->
-      <div class="main-panel" >
+      <!--<div class="main-panel" >-->
+      <div>
         <div class="content-wrapper">
           <div class="row">
             <div class="col-sm-12 mb-4 mb-xl-0">
-              
-              
-              
               <p class="font-weight-normal mb-2 text-muted"><span id="data-atual"></span></p>
               <script>
                 var data = new Date();
@@ -111,7 +110,9 @@
           </div>
 
         </div>
-
+        <?php
+          include("../../partials/_footer.php");
+        ?>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <!--<footer class="footer">

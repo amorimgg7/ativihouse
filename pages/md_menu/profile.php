@@ -35,13 +35,11 @@
     <!-- partial:partials/_navbar.html -->
     <?php include ("../../partials/_navbar.php");?>
     <!-- partial -->
-    <!--<div class="container-fluid page-body-wrapper">-->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:partials/_sidebar.html -->
         <?php include ("../../partials/_sidebar.php");?>
         <!-- partial -->
-			<!--<div class="main-panel">-->
-			<div>
+            <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-12 grid-margin stretch-card">
