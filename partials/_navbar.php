@@ -1,5 +1,5 @@
 <nav class="navbar fixed-top p-3 align-items-center" >
-  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" <?php echo $_SESSION['c_navbar']?>>
     <a class=" navbar-brand brand-logo" href="<?php $_SESSION['dominio'];?>"><img src="<?php $_SESSION['dominio'];?>images/logo-mini.svg" alt="logo"/></a>
     <a class="navbar-brand brand-logo-mini" href="<?php $_SESSION['dominio'];?>"><img src="<?php $_SESSION['dominio'];?>images/logo-mini.svg" alt="logo"/></a>
   </div>

@@ -42,7 +42,7 @@
         <!-- partial -->
 			<!--<div class="main-panel">-->
 			<div>
-                <div class="content-wrapper">
+                <div>
                     <div class="row">
                         <div class="col-12 grid-margin stretch-card">
                             <div class="card">
@@ -114,66 +114,105 @@
 													if(!isset($_SESSION['opcaoMenu'])){
 														$_SESSION['opcaoMenu'] = 1;
 													}
+													
+													//if(isset($_POST['concpf_pessoal'])) {
+                    								// Consulta o usuário pelo CPF
+													if(isset($_POST['atualizar_senha'])){			//atualizar_senha						
+														$query = "SELECT * FROM tb_pessoa WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."'";
+														$result = mysqli_query($conn, $query);
+														$row = mysqli_fetch_assoc($result);
+														// Exibe as informações do usuário no formulário
+														if($row['senha_colab'] == $_POST['senha_atual']) {
+															echo "<script>window.alert('Senha certa');</script>";
+															if($_POST['senha_nova1'] == $_POST['senha_nova2']){
+																echo "<script>window.alert('Confirmação de senha certa');</script>";
+																$query = "UPDATE tb_pessoa SET
+														        	senha_colab = '".$_POST['senha_nova2']."'
+																	WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."';
+																";
+																mysqli_query($conn, $query);
+																//echo "<script>window.alert('Usuário atualizado com sucesso!');</script>";
+																
+																echo "<script>";// Limpa os cookies
+												                // Remove as informações do formulário do histórico de navegação';
+												                echo "history.replaceState({}, document.title, window.location.href.split('?')[0]);";
+												                // Recarrega a página
+		                                    					echo "window.location.reload();";
+												                echo "</script>";
+																
+															}
+															else
+															{
+																echo "<script>window.alert('CONFIRMAÇÃO DE SENHA ERRADA!');</script>";
+															}
+															//echo '<script>document.getElementById("editcd_estilo").value = "'.$row['cd_estilo'].'"</script>';
+															//echo '<script>document.getElementById("editcd_seg").value = "'.$row['cd_seg'].'"</script>';
+															//echo '<script>document.getElementById("editcd_funcao").value = "'.$row['cd_funcao'].'"</script>';
+															//echo "<script>window.alert('Senha certa');</script>";
+														}else{
+															echo "<script>window.alert('SENHA ERRADA!');</script>";
+														}
+													}
+															
+
 
 													if(isset($_POST['gravaInfoPessoal_Funcao'])) {
+														if($_FILES["fotoPessoa"]["error"] == UPLOAD_ERR_OK){
 
-
-														if($_FILES["fotoProduto"]["error"] == UPLOAD_ERR_OK){
-
-															$caminho_pasta_produto = "../web/imagens/".$_SESSION['cnpj_filial']."/";
-															if (!file_exists($caminho_pasta_produto)) {// Verificar se o diretório de destino existe, senão, criar
-															  mkdir($caminho_pasta_produto, 0777, true);
-															  echo "<script>window.alert('Criando diretório da Empresa! ".$caminho_pasta_produto."');</script>";
+															$caminho_pasta_pessoa = "../web/imagens/pessoas/".$_SESSION['cd_pessoa']."/";
+															if (!file_exists($caminho_pasta_pessoa)) {// Verificar se o diretório de destino existe, senão, criar
+															  mkdir($caminho_pasta_pessoa, 0777, true);
+															  echo "<script>window.alert('Criando diretório da Pessoa! ".$caminho_pasta_pessoa."');</script>";
 									  
 															}
-															$caminho_pasta_produto .= "produto/";
-															if (!file_exists($caminho_pasta_produto)) {
-															  mkdir($caminho_pasta_produto, 0777, true);
-															  echo "<script>window.alert('Criando diretório dos produtos da empresa! ".$caminho_pasta_produto."');</script>";
+															$caminho_pasta_pessoa .= "/";
+															if (!file_exists($caminho_pasta_pessoa)) {
+															  mkdir($caminho_pasta_pessoa, 0777, true);
+															  echo "<script>window.alert('Criando diretório dos produtos da empresa! ".$caminho_pasta_pessoa."');</script>";
 									  
 															}
-															$foto_produto = "1-foto.jpg"; // Nome do arquivo que será salvo
+															$foto_pessoa = "1-foto.jpg"; // Nome do arquivo que será salvo
 																  
-															$caminho_foto_produto = $caminho_pasta_produto . $foto_produto;
+															$caminho_foto_pessoa = $caminho_pasta_pessoa . $foto_pessoa;
 															
-															$tipo_foto_produto = exif_imagetype($_FILES["fotoProduto"]["tmp_name"]);
+															$tipo_foto_pessoa = exif_imagetype($_FILES["fotoPessoa"]["tmp_name"]);
 										  
 															$extensoes_permitidas = array(IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF);
 									  
-															if (in_array($tipo_foto_produto, $extensoes_permitidas)) {
+															if (in_array($tipo_foto_pessoa, $extensoes_permitidas)) {
 																// Redimensionar a imagem para 100x100
-																list($largura_orig, $altura_orig) = getimagesize($_FILES["fotoProduto"]["tmp_name"]);
+																list($largura_orig, $altura_orig) = getimagesize($_FILES["fotoPessoa"]["tmp_name"]);
 																$nova_largura = 500;
 																$nova_altura = 500;
 																$imagem_redimensionada = imagecreatetruecolor(500, 500);
 									  
-																switch ($tipo_foto_produto) {
+																switch ($tipo_foto_pessoa) {
 																	case IMAGETYPE_JPEG:
-																		$imagem_orig = imagecreatefromjpeg($_FILES["fotoProduto"]["tmp_name"]);
+																		$imagem_orig = imagecreatefromjpeg($_FILES["fotoPessoa"]["tmp_name"]);
 																	break;
 																	case IMAGETYPE_PNG:
-																		$imagem_orig = imagecreatefrompng($_FILES["fotoProduto"]["tmp_name"]);
+																		$imagem_orig = imagecreatefrompng($_FILES["fotoPessoa"]["tmp_name"]);
 																	break;
 																	case IMAGETYPE_GIF:
-																		$imagem_orig = imagecreatefromgif($_FILES["fotoProduto"]["tmp_name"]);
+																		$imagem_orig = imagecreatefromgif($_FILES["fotoPessoa"]["tmp_name"]);
 																	break;
 																}
 									  
 																imagecopyresampled($imagem_redimensionada, $imagem_orig, 0, 0, 0, 0, $nova_largura, $nova_altura, $largura_orig, $altura_orig);
 									  
 																// Salvar a miniatura
-																switch ($tipo_foto_produto) {
+																switch ($tipo_foto_pessoa) {
 																	case IMAGETYPE_JPEG:
-																	  //imagegif($imagem_redimensionada, $caminho_foto_produto);
-																	  imagejpeg($imagem_redimensionada, $caminho_foto_produto);
+																	  //imagegif($imagem_redimensionada, $caminho_foto_pessoa);
+																	  imagejpeg($imagem_redimensionada, $caminho_foto_pessoa);
 																	break;
 																	case IMAGETYPE_PNG:
-																	  //imagegif($imagem_redimensionada, $caminho_foto_produto);
-																	  imagepng($imagem_redimensionada, $caminho_foto_produto);
+																	  //imagegif($imagem_redimensionada, $caminho_foto_pessoa);
+																	  imagepng($imagem_redimensionada, $caminho_foto_pessoa);
 																	break;
 																	case IMAGETYPE_GIF:
-																	  //imagegif($imagem_redimensionada, $caminho_foto_produto);
-																	  imagegif($imagem_redimensionada, $caminho_foto_produto);
+																	  //imagegif($imagem_redimensionada, $caminho_foto_pessoa);
+																	  imagegif($imagem_redimensionada, $caminho_foto_pessoa);
 																	break;
 																}
 									  
@@ -189,13 +228,14 @@
 
 
 														// Atualiza as informações do usuário no banco de dados
-														$query = "UPDATE tb_colab SET
-														pnome_colab = '".$_POST['editpnome_colab']."',
-														snome_colab = '".$_POST['editsnome_colab']."',
-														obs_colab = '".$_POST['editobs_colab']."'
-														WHERE cd_colab = '".$_POST['editcd_colab']."'";
+														$query = "UPDATE tb_pessoa SET
+														pnome_pessoa = '".$_POST['editpnome_pessoa']."',
+														snome_pessoa = '".$_POST['editsnome_pessoa']."',
+														obs_pessoa = '".$_POST['editobs_pessoa']."'
+														WHERE cd_pessoa = '".$_POST['editcd_pessoa']."'";
 														if(mysqli_query($conn, $query)){
 															echo "<script>window.alert('Cadastro Atualizado com sucesso!');</script>";
+															
 														}else{
 															echo "<script>window.alert('Erro ao atualizar Cadastro!');</script>";
 														}
@@ -211,11 +251,11 @@
 
 													if(isset($_POST['gravaInfoContatos_Funcao'])) {
 														// Atualiza as informações do usuário no banco de dados
-														$query = "UPDATE tb_colab SET
-														email_colab = '".$_POST['editemail_colab']."',
-														tel_colab = '".$_POST['edittel_colab']."',
-														obs_tel_colab = '".$_POST['editobstel_colab']."'
-														WHERE cd_colab = '".$_SESSION['cd_colab']."'";
+														$query = "UPDATE tb_pessoa SET
+														email_pessoa = '".$_POST['editemail_pessoa']."',
+														tel_pessoa = '".$_POST['edittel_pessoa']."',
+														obs_tel_pessoa = '".$_POST['editobstel_pessoa']."'
+														WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."'";
 														if(mysqli_query($conn, $query)){
 															echo "<script>window.alert('Cadastro Atualizado com sucesso!');</script>";
 														}else{
@@ -237,9 +277,23 @@
 														cd_estilo = '".$_POST['editcd_estilo']."',
 														cd_seg = '".$_POST['editcd_seg']."',
 														cd_funcao = '".$_POST['editcd_funcao']."'
-														WHERE cd_colab = '".$_SESSION['cd_colab']."';";
+														WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."';";
 														if(mysqli_query($conn, $query)){
 															echo "<script>window.alert('Cadastro Atualizado com sucesso!');</script>";
+															$u = new Usuario;
+															$u->conectar();
+															if($u->logar($_SESSION['email_pessoa'], $_SESSION['senha_pessoa']))  
+                    										  {
+																echo "<script>window.alert('Sucesso!');</script>";
+
+                    										  }
+                    										  else
+                    										  {
+                    										    
+                    										    echo "<script>setTimeout(function() { window.history.back(); }, 3000);</script>";
+                    										    
+															
+                    										  }
 														}else{
 															echo "<script>window.alert('Erro ao atualizar Cadastro!');</script>";
 														}
@@ -256,17 +310,17 @@
 													} 
 
 													if(isset($_POST['gravaInfoSenha_Funcao'])){			//atualizar_senha						
-														$query = "SELECT * FROM tb_colab WHERE cd_colab = '".$_SESSION['cd_colab']."'";
+														$query = "SELECT * FROM tb_pessoa WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."'";
 														$result = mysqli_query($conn, $query);
 														$row = mysqli_fetch_assoc($result);
 														// Exibe as informações do usuário no formulário
-														if($row['senha_colab'] == $_POST['senha_atual']) {
+														if($row['senha_pessoa'] == $_POST['senha_atual']) {
 															echo "<script>window.alert('Senha certa');</script>";
 															if($_POST['senha_nova1'] == $_POST['senha_nova2']){
 																echo "<script>window.alert('Confirmação de senha certa');</script>";
-																$query = "UPDATE tb_colab SET
-														        	senha_colab = '".$_POST['senha_nova2']."'
-																	WHERE cd_colab = '".$_SESSION['cd_colab']."';
+																$query = "UPDATE tb_pessoa SET
+														        	senha_pessoa = '".$_POST['senha_nova2']."'
+																	WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."';
 																";
 																if(mysqli_query($conn, $query)){
 																	echo "<script>window.alert('Cadastro Atualizado com sucesso!');</script>";
@@ -316,7 +370,7 @@
 														echo ' <div class="kt-section__body">';
 
 
-														$query = "SELECT * FROM tb_colab WHERE cd_colab = '".$_SESSION['cd_colab']."'";
+														$query = "SELECT * FROM tb_pessoa WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."'";
 														$result = mysqli_query($conn, $query);
 														$row = mysqli_fetch_assoc($result);
 														// Exibe as informações do usuário no formulário
@@ -324,45 +378,45 @@
 															echo ' <div class="form-group row" style="display: block;">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">CD</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="tel" name="editcd_colab" id="editcd_colab" class="form-control" value="'.$row['cd_colab'].'" readonly/>																				';
+															echo ' <input type="tel" name="editcd_pessoa" id="editcd_pessoa" class="form-control" value="'.$row['cd_pessoa'].'" readonly/>																				';
 															echo ' </div>';
 															echo ' </div>';
 
-															echo '<label for="imagem-preview-produto"></label>';
-                echo "<div class='card' style='max-width: 100%; max-height: 50vh;'>";
-                $caminho_pasta_produto = "../web/imagens/".$_SESSION['cnpj_filial']."//produto/";
-                $foto_produto = "1-foto.jpg"; // Nome do arquivo que será salvo
-                $caminho_foto_produto = $caminho_pasta_produto . $foto_produto;
-
-                if (file_exists($caminho_foto_produto)) {
-                  $tipo_foto_produto = mime_content_type($caminho_foto_produto);
-                  echo "<img class='card-img-top img-thumbnail mx-auto' id='imagem-preview-produto' style='width: 200px; height: 200px;' src='data:$tipo_foto_produto;base64," . base64_encode(file_get_contents($caminho_foto_produto)) . "' alt='Imagem'>"; 
-                }
-
-                echo '<div class="card-body text-center">';
-                echo '<label for="fotoProduto" class="btn btn-block btn-lg btn-outline-success">';
-                echo '<i class="bi bi-paperclip"></i> Escolher arquivo';
-                echo '<input type="file" name="fotoProduto" id="fotoProduto" style="display: none;">';
-                echo '</label>';
-                echo '</div>';
-                echo '</div>';
+															//echo '<label for="imagem-preview-pessoa"></label>';
+                											//echo "<div class='card' style='max-width: 100%; max-height: 50vh;'>";
+                											//$caminho_pasta_pessoa = "../web/imagens/pessoas/".$_SESSION['cd_pessoa']."//";
+                											//$foto_pessoa = "1-foto.jpg"; // Nome do arquivo que será salvo
+                											//$caminho_foto_pessoa = $caminho_pasta_pessoa . $foto_pessoa;
+																									//
+                											//if (file_exists($caminho_foto_pessoa)) {
+                											//  $tipo_foto_pessoa = mime_content_type($caminho_foto_pessoa);
+                											//  echo "<img class='card-img-top img-thumbnail mx-auto' id='imagem-preview-pessoa' style='width: 200px; height: 200px;' src='data:$tipo_foto_pessoa;base64," . base64_encode(file_get_contents($caminho_foto_pessoa)) . "' alt='Imagem'>"; 
+                											//}
+														//
+                											//echo '<div class="card-body text-center">';
+                											//echo '<label for="fotoPessoa" class="btn btn-block btn-lg btn-outline-success">';
+                											//echo '<i class="bi bi-paperclip"></i> Escolher arquivo';
+                											//echo '<input type="file" name="fotoPessoa" id="fotoPessoa" style="display: none;">';
+                											//echo '</label>';
+                											//echo '</div>';
+                											//echo '</div>';
 
 
                 ?>
                 <script>
-                    const imagemInputCliente = document.getElementById('fotoProduto');
-                    const imagemPreviewCliente = document.getElementById('imagem-preview-produto');
+                    const imagemInputPessoa = document.getElementById('fotoPessoa');
+                    const imagemPreviewPessoa = document.getElementById('imagem-preview-pessoa');
 
-                    imagemInputCliente.addEventListener('change', function(event) {
+                    imagemInputPessoa.addEventListener('change', function(event) {
                         const arquivo = event.target.files[0];
                         if (arquivo) {
                             const leitor = new FileReader();
                             leitor.onload = function(e) {
-                                imagemPreviewCliente.src = e.target.result;
+                                imagemPreviewPessoa.src = e.target.result;
                             }
                             leitor.readAsDataURL(arquivo);
                         } else {
-                            imagemPreviewCliente.src = '#';
+                            imagemPreviewPessoa.src = '#';
                         }
                     });
                 </script>
@@ -372,35 +426,35 @@
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Nome</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editpnome_colab" id="editpnome_colab" value = "'.$row['pnome_colab'].'" class="form-control" />																				';
+															echo ' <input type="text" name="editpnome_pessoa" id="editpnome_pessoa" value = "'.$row['pnome_pessoa'].'" class="form-control" />																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Sobrenome</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editsnome_colab" id="editsnome_colab" value = "'.$row['snome_colab'].'" class="form-control" />																				';
+															echo ' <input type="text" name="editsnome_pessoa" id="editsnome_pessoa" value = "'.$row['snome_pessoa'].'" class="form-control" />																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">CPF</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editcpf_colab" id="editcpf_colab" class="form-control" value = "'.$row['cpf_colab'].'" readonly/>																				';
+															echo ' <input type="text" name="editcpf_pessoa" id="editcpf_pessoa" class="form-control" value = "'.$row['cpf_pessoa'].'" readonly/>																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Data de Nascimento</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="date" name="editdtnasc_colab" id="editdtnasc_colab" class="form-control" value = "'.$row['dtnasc_colab'].'" readonly/>																				';
+															echo ' <input type="date" name="editdtnasc_pessoa" id="editdtnasc_pessoa" class="form-control" value = "'.$row['dtnasc_pessoa'].'" readonly/>																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Observações</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editobs_colab" id="editobs_colab" value = "'.$row['obs_colab'].'" class="form-control" />																				';
+															echo ' <input type="text" name="editobs_pessoa" id="editobs_pessoa" value = "'.$row['obs_pessoa'].'" class="form-control" />																				';
 															echo ' </div>';
 															echo ' </div>';			
 														}
@@ -439,7 +493,7 @@
 														echo ' <div class="kt-section kt-section--first">';
                                 						echo ' <div class="kt-section__body">';
 
-														$query = "SELECT * FROM tb_colab WHERE cd_colab = '".$_SESSION['cd_colab']."'";
+														$query = "SELECT * FROM tb_pessoa WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."'";
 													    $result = mysqli_query($conn, $query);
 													    $row = mysqli_fetch_assoc($result);
 													    // Exibe as informações do usuário no formulário
@@ -448,21 +502,21 @@
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">E-mail</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editemail_colab" id="editemail_colab" class="form-control" value = "'.$row['email_colab'].'" readonly />																				';
+															echo ' <input type="text" name="editemail_pessoa" id="editemail_pessoa" class="form-control" value = "'.$row['email_pessoa'].'" readonly />																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Telefone</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="edittel_colab" id="edittel_colab" value = "'.$row['tel_colab'].'" class="form-control" />																				';
+															echo ' <input type="text" name="edittel_pessoa" id="edittel_pessoa" value = "'.$row['tel_pessoa'].'" class="form-control" />																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Obs Telefone</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editobstel_colab" id="editobstel_colab" value = "'.$row['obs_tel_colab'].'" class="form-control" />																				';
+															echo ' <input type="text" name="editobstel_pessoa" id="editobstel_pessoa" value = "'.$row['obs_tel_pessoa'].'" class="form-control" />																				';
 															echo ' </div>';
 															echo ' </div>';
 
@@ -517,7 +571,7 @@
 														
 														//if(isset($_POST['concpf_pessoal'])) {
                     									// Consulta o usuário pelo CPF
-													    $query_rel_user = "SELECT * FROM rel_user WHERE cd_colab = '".$_SESSION['cd_colab']."' AND cd_empresa = '".$_SESSION['cd_empresa']."'";
+													    $query_rel_user = "SELECT * FROM rel_user WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."' AND cd_casa = '".$_SESSION['cd_casa']."'";
 													    $result_rel_user = mysqli_query($conn, $query_rel_user);
 													    $row_rel_user = mysqli_fetch_assoc($result_rel_user);
 												        // Exibe as informações do usuário no formulário
@@ -766,7 +820,7 @@
 															<?php
 																//if(isset($_POST['concpf_pessoal'])) {
                     											// Consulta o usuário pelo CPF
-													            $query = "SELECT * FROM rel_user WHERE cd_colab = '".$_SESSION['cd_colab']."' AND cd_empresa = '".$_SESSION['cd_empresa']."'";
+													            $query = "SELECT * FROM rel_user WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."' AND cd_empresa = '".$_SESSION['cd_empresa']."'";
 													            $result = mysqli_query($conn, $query);
 													            $row = mysqli_fetch_assoc($result);
 													            // Exibe as informações do usuário no formulário
@@ -783,7 +837,7 @@
 														            cd_estilo = '".$_POST['editcd_estilo']."',
 														            cd_seg = '".$_POST['editcd_seg']."',
 																	cd_funcao = '".$_POST['editcd_funcao']."'
-																	WHERE cd_colab = '".$_SESSION['cd_colab']."';";
+																	WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."';";
 																	mysqli_query($conn, $query);
 																	//echo "<script>window.alert('Usuário atualizado com sucesso!');</script>";
 																	?>
@@ -851,45 +905,7 @@
                             					    				</div>
                             						    		</div>
 															</form>
-															<?php
-																//if(isset($_POST['concpf_pessoal'])) {
-                    											// Consulta o usuário pelo CPF
-																if(isset($_POST['atualizar_senha'])){			//atualizar_senha						
-														            $query = "SELECT * FROM tb_colab WHERE cd_colab = '".$_SESSION['cd_colab']."'";
-														            $result = mysqli_query($conn, $query);
-														            $row = mysqli_fetch_assoc($result);
-														            // Exibe as informações do usuário no formulário
-														            if($row['senha_colab'] == $_POST['senha_atual']) {
-																		echo "<script>window.alert('Senha certa');</script>";
-																		if($_POST['senha_nova1'] == $_POST['senha_nova2']){
-																			echo "<script>window.alert('Confirmação de senha certa');</script>";
-																			$query = "UPDATE tb_colab SET
-														        			    senha_colab = '".$_POST['senha_nova2']."'
-																	        	WHERE cd_colab = '".$_SESSION['cd_colab']."';
-																			";
-																			mysqli_query($conn, $query);
-																			//echo "<script>window.alert('Usuário atualizado com sucesso!');</script>";
-																			?>
-																				<script>// Limpa os cookies
-												                                	// Remove as informações do formulário do histórico de navegação';
-												                                	history.replaceState({}, document.title, window.location.href.split('?')[0]);
-												                                    // Recarrega a página
-		                                    										window.location.reload();
-												                                </script>
-																			<?php
-																		}
-																		else{
-																			echo "<script>window.alert('CONFIRMAÇÃO DE SENHA ERRADA!');</script>";
-																		}
-															        	//echo '<script>document.getElementById("editcd_estilo").value = "'.$row['cd_estilo'].'"</script>';
-															            //echo '<script>document.getElementById("editcd_seg").value = "'.$row['cd_seg'].'"</script>';
-																		//echo '<script>document.getElementById("editcd_funcao").value = "'.$row['cd_funcao'].'"</script>';
-																		//echo "<script>window.alert('Senha certa');</script>";
-																	}else{
-																		echo "<script>window.alert('SENHA ERRADA!');</script>";
-																	}
-																}
-															?>
+															
     	                            					</div>
 			                                        </div>
             	                            	</div>
@@ -908,11 +924,9 @@
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
-        <footer class="footer">
-        	<div class="d-sm-flex justify-content-center justify-content-sm-between">
-            	<span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Erp-NuvemSoft</span>
-        	</div>
-        </footer>
+        <?php
+          //include("../../partials/_footer.php");
+        ?>
         <!-- partial -->
       </div>
       <!-- main-panel ends -->

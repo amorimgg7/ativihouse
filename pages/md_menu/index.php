@@ -81,7 +81,7 @@
 
         </div>
         <?php
-          include("../../partials/_footer.php");
+          //include("../../partials/_footer.php");
         ?>
         <!-- partial -->
       </div>

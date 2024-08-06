@@ -41,7 +41,73 @@ class Usuario
                 $sql2->bindValue(":cdp", $_SESSION['cd_pessoa']);
                 $sql2->execute();
             }
+            if($sql1->rowCount() > 0)
+            {
+                
+                //entrar no sistema(sessão)
+                $rel_user = $sql1->fetch();
+                //session_start();
+                $_SESSION['cd_seg'] = $rel_user['cd_seg'];
+                $_SESSION['cd_estilo'] = $rel_user['cd_estilo'];
+                 
+                $_SESSION['cd_empresa'] = $rel_user['cd_empresa'];
+                $_SESSION['cd_funcao'] = $rel_user['cd_funcao'];
+                       
+           
+                $sql4 = $pdo->prepare("SELECT * FROM tb_funcao WHERE cd_funcao = ".$_SESSION['cd_funcao']."");
+                $sql4->execute();
+                if($sql4->rowCount() > 0)
+                {
+                    //entrar no sistema(sessão)
+                    $tb_funcao = $sql4->fetch();
+                    //session_start();
+                   
+                    $_SESSION['md_cadastro_hw'] = $tb_funcao['md_cadastro_hw'];
+                    $_SESSION['md_edicao_hw'] = $tb_funcao['md_edicao_hw'];
+                    $_SESSION['md_cadastro_pessoa'] = $tb_funcao['md_cadastro_pessoa'];
+                    $_SESSION['md_edita_pessoa'] = $tb_funcao['md_edita_pessoa'];
+                    $_SESSION['md_permite_pessoa'] = $tb_funcao['md_permite_pessoa'];
+                }
+                
+            }
+            else{
+                
+                //entrar no sistema(sessão)
+                //$seg_pessoal_empresa_estilo = $sql1->fetch();
+                //session_start();
+                //$_SESSION['cd_seg'] = 0;
+                //$_SESSION['cd_estilo'] = 0;
+                 
+                //$_SESSION['cd_empresa'] = 0; 
+                //$_SESSION['cd_setor'] = 0; 
+            }
 
+
+
+            $sql4 = $pdo->prepare("SELECT * FROM tb_estilo WHERE cd_estilo = ".$_SESSION['cd_estilo']."");
+            $sql4->execute();
+
+            if($sql4->rowCount() > 0)
+            {
+                //entrar no sistema(sessão)
+                $tb_estilo = $sql4->fetch();
+                //session_start();
+                $_SESSION['t_sidebar'] = $tb_estilo['t_sidebar'];
+                $_SESSION['c_sidebar'] = $tb_estilo['c_sidebar'];
+
+                $_SESSION['t_navbar'] = $tb_estilo['t_navbar'];
+                $_SESSION['c_navbar'] = $tb_estilo['c_navbar'];
+
+                $_SESSION['t_font'] = $tb_estilo['t_font'];
+                $_SESSION['c_font'] = $tb_estilo['c_font'];
+
+                $_SESSION['c_body'] = $tb_estilo['c_body'];
+                $_SESSION['c_card'] = $tb_estilo['c_card'];
+
+                
+
+
+            }
             echo '<script>location.href="../../pages/dashboard/index.php";</script>';
             return true;
         }
