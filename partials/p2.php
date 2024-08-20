@@ -58,8 +58,14 @@ if ($resulta_casa->num_rows > 0) {
             if (($dataAtual - $dataStatus) > 10) {
                 // A data e hora são maiores que 30 segundos
                 echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px; max-width: 18rem;">';
-                echo '<div class="card-header bg-danger">Offline';
-                echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
+
+                if($_SESSION['md_edicao_hw'] == 0){
+                    echo '<div class="card-header bg-danger">Offline';
+                }else if($_SESSION['md_edicao_hw'] == 1){
+                    echo '<div class="card-header bg-danger">Offline';
+                }else if($_SESSION['md_edicao_hw'] == 2){
+                    echo '<div class="card-header bg-danger"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-danger">Offline&nbsp<i class="icon-ellipsis"></i></a></div>'; 
+                }
                 echo '</div>';    
             } else {
                 // A data e hora não são maiores que 30 segundos
