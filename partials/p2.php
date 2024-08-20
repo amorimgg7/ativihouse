@@ -66,7 +66,7 @@ if ($resulta_casa->num_rows > 0) {
                 }else if($_SESSION['md_edicao_hw'] == 2){
                     echo '<div class="card-header bg-danger"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-danger">Offline&nbsp<i class="icon-ellipsis"></i></a></div>'; 
                 }
-                echo '</div>';    
+                    
             } else {
                 // A data e hora não são maiores que 30 segundos
                 echo '<div class="card text-white border-success mb-3 shadow-lg bg-secondary mb-3 align-items-center" style="margin: 10px; max-width: 18rem;">';
