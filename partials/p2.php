@@ -88,6 +88,18 @@ if ($resulta_casa->num_rows > 0) {
                 }
                 //echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
             }
+            echo '<p style="text-align: center;"> ';
+            for($i = 1; $i < 7; $i++){
+                if($casas['canal_'.$i] > 0){
+                    if($casas['canal_'.$i] == 1){
+                        echo ' <i style="color: #D00;" class="icon-circle-cross"></i> ';
+                    }
+                    if($casas['canal_'.$i] == 2){
+                        echo ' <i style="color: #0D0;" class="icon-circle-check"></i> ';
+                    }   
+                }
+            }
+            echo ' </p>';
         }
         
         echo '<div class="card-body">';
@@ -118,18 +130,7 @@ if ($resulta_casa->num_rows > 0) {
             
             echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Parametros">';
             
-            echo '<p style="text-align: center;"> ';
-            for($i = 1; $i < 7; $i++){
-                if($casas['canal_'.$i] > 0){
-                    if($casas['canal_'.$i] == 1){
-                        echo ' <i style="color: #D00;" class="icon-circle-cross"></i> ';
-                    }
-                    if($casas['canal_'.$i] == 2){
-                        echo ' <i style="color: #0D0;" class="icon-circle-check"></i> ';
-                    }   
-                }
-            }
-            echo ' </p>';
+            
             echo '</form>';
             
         }
