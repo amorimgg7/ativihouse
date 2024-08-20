@@ -64,7 +64,10 @@ if ($resulta_casa->num_rows > 0) {
                 }else if($_SESSION['md_edicao_hw'] == 1){
                     echo '<div class="card-header bg-danger">Offline';
                 }else if($_SESSION['md_edicao_hw'] == 2){
-                    echo '<div class="card-header bg-danger"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-danger">Offline&nbsp<i class="icon-ellipsis"></i></a></div>'; 
+                    echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
+                    echo '<input type="text" value="'.$casas['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
+                    echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="Offline"></div>'; 
+                    echo '</form>';
                 }
                     
             } else {
@@ -76,7 +79,12 @@ if ($resulta_casa->num_rows > 0) {
                 }else if($_SESSION['md_edicao_hw'] == 1){
                     echo '<div class="card-header bg-success">Online <i class="icon-ellipsis"></i></div>';
                 }else if($_SESSION['md_edicao_hw'] == 2){
-                    echo '<div class="card-header bg-success"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-success">Online&nbsp<i class="icon-ellipsis"></i></a></div>'; 
+                    echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
+                    echo '<input type="text" value="'.$casas['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
+                    echo '<div class="card-header bg-success"><input class="btn btn-block btn-success" type="submit" value="Online"></div>'; 
+                    echo '</form>';
+
+                    //echo '<div class="card-header bg-success"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-success">Online&nbsp<i class="icon-ellipsis"></i></a></div>'; 
                 }
                 //echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
             }
