@@ -19,8 +19,10 @@
     if($row_Higrometro_1_0) {
         // A data e hora não são maiores que 30 segundos
         echo '<div class="card text-white border-success shadow-lg bg-secondary  align-items-center" style="margin: 10px;">';
-        echo '<div class="card-header btn-block"><h1 class="card-title">Central de controle térmico</h1></div>'; 
-        echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/editar_clima_tempo.php">';
+        echo '<div class="card-header btn-block"><h1 class="card-title">Central de controle térmico</h1>';
+        echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
+        echo '</div>'; 
+        echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/view_clima_tempo.php">';
         echo '<input type="text" id="concd_casa" name="concd_casa" value="'.$_SESSION['cd_casa'].'" style="display:none;">';
         echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Parametros">';
         echo '</form>';
@@ -56,17 +58,27 @@ if ($resulta_casa->num_rows > 0) {
             if (($dataAtual - $dataStatus) > 10) {
                 // A data e hora são maiores que 30 segundos
                 echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px; max-width: 18rem;">';
-                echo '<div class="card-header bg-danger">Offline</div>';    
+                echo '<div class="card-header bg-danger">Offline';
+                echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
+                echo '</div>';    
             } else {
                 // A data e hora não são maiores que 30 segundos
                 echo '<div class="card text-white border-success mb-3 shadow-lg bg-secondary mb-3 align-items-center" style="margin: 10px; max-width: 18rem;">';
-                echo '<div class="card-header bg-success">Online</div>'; 
+                
+                if($_SESSION['md_edicao_hw'] == 0){
+                    echo '<div class="card-header bg-success">Online <i class="icon-ellipsis"></i></div>';
+                }else if($_SESSION['md_edicao_hw'] == 1){
+                    echo '<div class="card-header bg-success">Online <i class="icon-ellipsis"></i></div>';
+                }else if($_SESSION['md_edicao_hw'] == 2){
+                    echo '<div class="card-header bg-success"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-success">Online&nbsp<i class="icon-ellipsis"></i></a></div>'; 
+                }
+                //echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
             }
         }
         
         echo '<div class="card-body">';
-        echo '<h5 class="card-title">'.$casas['local_dispositivo'].'</h5>';
-        echo '<h5 class="card-title">'.$casas['marca_dispositivo'].' '.$casas['modelo_dispositivo'].' '.$casas['versao_dispositivo'].'</h5>';
+        echo '<h5 class="card-title">'.$casas['titulo_dispositivo'].' - '.$casas['local_dispositivo'].'</h5>';
+        //echo '<h5 class="card-title">'.$casas['marca_dispositivo'].' '.$casas['modelo_dispositivo'].' '.$casas['versao_dispositivo'].'</h5>';
         echo '<p class="card-title">IP - '.$casas['ip_dispositivo'].'</p>';
         echo '<p class="card-title">MAC - '.$casas['mac_dispositivo'].'</p>';
         echo '</div>';
@@ -81,15 +93,29 @@ if ($resulta_casa->num_rows > 0) {
             //echo '</form>';
         } else {
             
-            echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/editar_dispositivo.php">';
+            echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/view_dispositivo.php">';
             if($casas['modelo_dispositivo'] == "Higrometro_1_0"){
                 echo '<input value="'. $casas['canal_1'] .'°C" class="btn mb-3 btn-block btn-sm btn-info">';
                 echo '<input value="'. $casas['canal_2'] .'%" class="btn mb-3 btn-block btn-sm btn-info">';
             }
             
             echo '<input type="text" id="concd_dispositivo" name="concd_dispositivo" value="'.$casas['cd_dispositivo'].'" style="display:none;">';
+            
+            
             echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Parametros">';
             
+            echo '<p style="text-align: center;"> ';
+            for($i = 1; $i < 7; $i++){
+                if($casas['canal_'.$i] > 0){
+                    if($casas['canal_'.$i] == 1){
+                        echo ' <i style="color: #D00;" class="icon-circle-cross"></i> ';
+                    }
+                    if($casas['canal_'.$i] == 2){
+                        echo ' <i style="color: #0D0;" class="icon-circle-check"></i> ';
+                    }   
+                }
+            }
+            echo ' </p>';
             echo '</form>';
             
         }
