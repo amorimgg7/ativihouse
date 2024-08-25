@@ -20,12 +20,18 @@
         // A data e hora não são maiores que 30 segundos
         echo '<div class="card text-white border-success shadow-lg bg-secondary  align-items-center" style="margin: 10px;">';
         echo '<div class="card-header btn-block"><h1 class="card-title">Central de controle térmico</h1>';
-        echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
+        //echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
         echo '</div>'; 
+        echo '<div class="col col-md-6 col-lg-6 d-flex justify-content-center">';
         echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/view_clima_tempo.php">';
         echo '<input type="text" id="concd_casa" name="concd_casa" value="'.$_SESSION['cd_casa'].'" style="display:none;">';
-        echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Parametros">';
+        echo '<input class="btn btn-outline-success btn-lg btn-block" type="submit" value="Visualizar Dados">';
         echo '</form>';
+        echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_clima_tempo.php">';
+        echo '<input type="text" id="concd_casa" name="concd_casa" value="'.$_SESSION['cd_casa'].'" style="display:none;">';
+        echo '<input class="btn btn-outline-success btn-lg btn-info" type="submit" value="preferencias do ambiente">';
+        echo '</form>';
+        echo '</div>';
         echo '<div class="card-footer text-muted">';
         echo '</div>';
         echo '</div>';

@@ -26,8 +26,6 @@
   <!-- endinject -->
   <!-- inject:css -->
   <link rel="stylesheet" href="../../css/style.css">
-
-  
 </head>
 
 <body onmousemove="resetTimer()" onclick="resetTimer()" onkeypress="resetTimer()">
@@ -77,9 +75,52 @@ if (isset($_SESSION['casa'])) {
         while ($Higrometro_1_0 = $resulta_Higrometro_1_0->fetch_assoc()) {
             $counter++;
 
+
+            $dataStatus = strtotime($Higrometro_1_0['dt_status_dispositivo']);
+            $dataAtual = time();
+
+            if (($dataAtual - $dataStatus) > 10) {
+                // A data e hora são maiores que 30 segundos
+                //echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px; max-width: 18rem;">';
+
+                echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px;">';
+
+                if($_SESSION['md_edicao_hw'] == 0){
+                    echo '<div class="card-header bg-danger">Offline';
+                }else if($_SESSION['md_edicao_hw'] == 1){
+                    echo '<div class="card-header bg-danger">Offline';
+                }else if($_SESSION['md_edicao_hw'] == 2){
+                    echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
+                    echo '<input type="text" value="'.$Higrometro_1_0['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
+                    //echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['cd_dispositivo'].' - '.$Higrometro_1_0['mac_dispositivo'].'"></div>'; 
+                    echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].'"></div>'; 
+                    echo '</form>';
+                }
+                    
+            } else {
+                // A data e hora não são maiores que 30 segundos
+                echo '<div class="card text-white border-success mb-3 shadow-lg bg-secondary mb-3 align-items-center" style="margin: 10px; max-width: 18rem;">';
+                
+                if($_SESSION['md_edicao_hw'] == 0){
+                    echo '<div class="card-header bg-success">Online <i class="icon-ellipsis"></i></div>';
+                }else if($_SESSION['md_edicao_hw'] == 1){
+                    echo '<div class="card-header bg-success">Online <i class="icon-ellipsis"></i></div>';
+                }else if($_SESSION['md_edicao_hw'] == 2){
+                    echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
+                    echo '<input type="text" value="'.$Higrometro_1_0['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
+                    //echo '<div class="card-header bg-success"><input class="btn btn-block btn-success" type="submit" value="Online"></div>'; 
+                    echo '<div class="card-header bg-success"><input class="btn btn-block btn-success" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].'"></div>'; 
+                    echo '</form>';
+
+                    //echo '<div class="card-header bg-success"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-success">Online&nbsp<i class="icon-ellipsis"></i></a></div>'; 
+                }
+                //echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
+            }
+
+
             // Estrutura HTML para os gráficos
-            echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px;">';
-            echo '<div class="card-header bg-danger">' . $counter . ' - ' . $Higrometro_1_0['mac_dispositivo'] . '</div>';
+            
+            //echo '<div class="card-header bg-danger">' . $counter . ' - ' . $Higrometro_1_0['mac_dispositivo'] . '</div>';
             echo '<div class="row mb-3 shadow-lg bg-secondary" style="margin: 0px;">
                     <div class="col-sm-6 col-lg-6 grid-margin stretch-card">
                       <div class="card">
@@ -229,12 +270,12 @@ if (isset($_SESSION['casa'])) {
                     createChart(ctxLine_24H, 'line', labels_24H, [temperatureDataset_24H, humidityDataset_24H]);
                 });
             </script>
-<?php
-        }
-    }
-}
-      
-?>
+          <?php
+                  }
+              }
+          }
+
+          ?>
 
               </div>
             </div>
