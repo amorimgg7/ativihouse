@@ -98,7 +98,21 @@ if (isset($_SESSION['casa'])) {
                 }
                     
             } else {
-                // A data e hora não são maiores que 30 segundos
+                
+              echo '<div class="card text-white border-success mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px;">';
+
+                if($_SESSION['md_edicao_hw'] == 0){
+                    echo '<div class="card-header bg-success">Offline';
+                }else if($_SESSION['md_edicao_hw'] == 1){
+                    echo '<div class="card-header bg-success">Offline';
+                }else if($_SESSION['md_edicao_hw'] == 2){
+                    echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
+                    echo '<input type="text" value="'.$Higrometro_1_0['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
+                    //echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['cd_dispositivo'].' - '.$Higrometro_1_0['mac_dispositivo'].'"></div>'; 
+                    echo '<div class="card-header bg-success"><input class="btn btn-block btn-success" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].'"></div>'; 
+                    echo '</form>';
+                }
+                /*
                 echo '<div class="card text-white border-success mb-3 shadow-lg bg-secondary mb-3 align-items-center" style="margin: 10px; max-width: 18rem;">';
                 
                 if($_SESSION['md_edicao_hw'] == 0){
@@ -114,6 +128,7 @@ if (isset($_SESSION['casa'])) {
 
                     //echo '<div class="card-header bg-success"><a href="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php" class="btn btn-block btn-success">Online&nbsp<i class="icon-ellipsis"></i></a></div>'; 
                 }
+                    */
                 //echo '<td><a href="'.$_SESSION['dominio'].'/pages/dashboard/index.php" class="btn btn-block btn-outline-warning"><i class="icon-cog"></i>Voltar ao início</a></td>';
             }
 
