@@ -136,7 +136,9 @@ if (isset($_SESSION['casa'])) {
             // Estrutura HTML para os gráficos
             
             //echo '<div class="card-header bg-danger">' . $counter . ' - ' . $Higrometro_1_0['mac_dispositivo'] . '</div>';
-            echo '<div class="row mb-3 shadow-lg bg-secondary" style="margin: 0px;">
+
+            /*
+              <!--<div class="row mb-3 shadow-lg bg-secondary" style="margin: 0px;">
                     <div class="col-sm-6 col-lg-6 grid-margin stretch-card">
                       <div class="card">
                         <div class="card-body">
@@ -145,8 +147,9 @@ if (isset($_SESSION['casa'])) {
                         </div>
                       </div>
                     </div>
-                  <!--</div>
-                  <div class="row mb-3 shadow-lg bg-secondary" style="margin: 0px;">-->
+                  </div>-->
+             */
+            echo '<!--<div class="row mb-3 shadow-lg bg-secondary" style="margin: 0px;">-->
                     <div class="col-sm-6 col-lg-6 grid-margin stretch-card">
                       <div class="card">
                         <div class="card-body">
@@ -155,10 +158,11 @@ if (isset($_SESSION['casa'])) {
                         </div>
                       </div>
                     </div>
-                  </div>';
-              echo '</div>';
+                  <!--</div>-->';
+              //echo '</div>';
 
             // Consultar dados do banco de dados
+            /*
             $sql_clima_tempo_1H = "SELECT 
                 DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:%i:00') AS minuto,
                 ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
@@ -173,7 +177,7 @@ if (isset($_SESSION['casa'])) {
             ORDER BY 
                 minuto DESC
             LIMIT 60;";
-
+*/
             $sql_clima_tempo_24H = "SELECT 
                                     DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:00:00') AS hora,
                                     ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
@@ -189,21 +193,21 @@ if (isset($_SESSION['casa'])) {
                                     hora DESC
                                 LIMIT 24";
 
-            $resulta_clima_tempo_1H = $conn->query($sql_clima_tempo_1H);
+            //$resulta_clima_tempo_1H = $conn->query($sql_clima_tempo_1H);
             $resulta_clima_tempo_24H = $conn->query($sql_clima_tempo_24H);
 
-            $temperaturas_1H = [];
-            $umidades_1H = [];
+            //$temperaturas_1H = [];
+            //$umidades_1H = [];
             $temperaturas_24H = [];
             $umidades_24H = [];
-
+/*
             if ($resulta_clima_tempo_1H->num_rows > 0) {
                 while ($clima_tempo_1H = $resulta_clima_tempo_1H->fetch_assoc()) {
                     $temperaturas_1H[] = $clima_tempo_1H["media_temperatura"];
                     $umidades_1H[] = $clima_tempo_1H["media_umidade"];
                 }
             }
-
+*/
             if ($resulta_clima_tempo_24H->num_rows > 0) {
                 while ($clima_tempo_24H = $resulta_clima_tempo_24H->fetch_assoc()) {
                     $temperaturas_24H[] = $clima_tempo_24H["media_temperatura"];
@@ -233,12 +237,12 @@ if (isset($_SESSION['casa'])) {
                     }
 
                     // Dados fornecidos pelo PHP para a última hora
-                    var temperaturas_1H = <?php echo json_encode($temperaturas_1H); ?>;
-                    var umidades_1H = <?php echo json_encode($umidades_1H); ?>;
-                    var labels_1H = Array.from({length: temperaturas_1H.length}, (_, i) => i + 1);
+                    //var temperaturas_1H = <?php //echo json_encode($temperaturas_1H); ?>;
+                    //var umidades_1H = <?php //echo json_encode($umidades_1H); ?>;
+                    //var labels_1H = Array.from({length: temperaturas_1H.length}, (_, i) => i + 1);
 
                     // Configuração dos datasets para a última hora
-                    var temperatureDataset_1H = {
+                    /*var temperatureDataset_1H = {
                         label: 'Temperatura (Última Hora)',
                         data: temperaturas_1H,
                         borderColor: 'rgba(75, 192, 192, 1)',
@@ -253,10 +257,10 @@ if (isset($_SESSION['casa'])) {
                         borderWidth: 1,
                         fill: false
                     };
-
+*/
                     // Gráfico de linha para a última hora
-                    var ctxLine_1H = document.getElementById('lineChart_1H_<?php echo $counter; ?>').getContext('2d');
-                    createChart(ctxLine_1H, 'line', labels_1H, [temperatureDataset_1H, humidityDataset_1H]);
+                    //var ctxLine_1H = document.getElementById('lineChart_1H_<?php echo $counter; ?>').getContext('2d');
+                    //createChart(ctxLine_1H, 'line', labels_1H, [temperatureDataset_1H, humidityDataset_1H]);
 
                     // Dados fornecidos pelo PHP para as últimas 24 horas
                     var temperaturas_24H = <?php echo json_encode($temperaturas_24H); ?>;

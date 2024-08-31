@@ -20,7 +20,7 @@
     <meta charset="utf-8">
     <meta>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Perfil</title>
+    <title>Casa</title>
     <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../vendors/feather/feather.css">
     <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
@@ -46,13 +46,13 @@
                                         <ul class="kt-nav kt-nav--bold kt-nav--md-space kt-nav--v3 kt-margin-t-20 kt-margin-b-20 nav nav-tabs" role="tablist">	    
                                             
 											<?php
-												if(isset($_POST['tabInfoPessoal'])){
+												if(isset($_POST['tabInfoCasa'])){
 													$_SESSION['opcaoMenu'] = 1;
-												}else if(isset($_POST['tabInfoContatos'])){
+												}else if(isset($_POST['tabInfoMoradores'])){
 													$_SESSION['opcaoMenu'] = 2;
-												}else if(isset($_POST['tabInfoPreferencias'])){
+												}else if(isset($_POST['tabInfoDispositivos'])){
 													$_SESSION['opcaoMenu'] = 3;
-												}else if(isset($_POST['tabInfoSenha'])){
+												}else if(isset($_POST['tabInfoSenhaCasa'])){
 													$_SESSION['opcaoMenu'] = 4;
 												}else
 											?>
@@ -71,16 +71,16 @@
 											<form method="POST">
 												<ul class="button-list">
 													<li class="kt-nav__item">
-														<input type="submit" id="tabInfoPessoal" name="tabInfoPessoal" class="btn btn-outline-secondary btn-lg btn-block" value="Informações Pessoais">
+														<input type="submit" id="tabInfoCasa" name="tabInfoCasa" class="btn btn-outline-secondary btn-lg btn-block" value="Dados da casa">
 													</li>
 													<li class="kt-nav__item">
-														<input type="submit" id="tabInfoContatos" name="tabInfoContatos" class="btn btn-outline-secondary btn-lg btn-block" value="Contatos">
+														<input type="submit" id="tabInfoMoradores" name="tabInfoMoradores" class="btn btn-outline-secondary btn-lg btn-block" value="Moradores">
 													</li>
 													<li class="kt-nav__item">
-														<input type="submit" id="tabInfoPreferencias" name="tabInfoPreferencias" class="btn btn-outline-secondary btn-lg btn-block" value="Preferências">    
+														<input type="submit" id="tabInfoDispositivos" name="tabInfoDispositivos" class="btn btn-outline-secondary btn-lg btn-block" value="Dispositivos">    
 													</li>
 													<li class="kt-nav__item">
-														<input type="submit" id="tabInfoSenha" name="tabInfoSenha" class="btn btn-outline-secondary btn-lg btn-block" value="Alterar Senha">
+														<input type="submit" id="tabInfoSenhaCasa" name="tabInfoSenhaCasa" class="btn btn-outline-secondary btn-lg btn-block" value="Senha Geral">
 													</li>
 												</ul>
 											</form>
@@ -151,13 +151,16 @@
 															
 
 
-													if(isset($_POST['gravaInfoPessoal_Funcao'])) {
+													if(isset($_POST['gravaInfoCasa_Funcao'])) {
 														// Atualiza as informações do usuário no banco de dados
-														$query = "UPDATE tb_pessoa SET
-														pnome_pessoa = '".$_POST['editpnome_pessoa']."',
-														snome_pessoa = '".$_POST['editsnome_pessoa']."',
-														obs_pessoa = '".$_POST['editobs_pessoa']."'
-														WHERE cd_pessoa = '".$_POST['editcd_pessoa']."'";
+														$query = "UPDATE tb_casa SET
+														cd_anfitriao = 		'".$_POST['editanfitriao_casa']."',
+														titulo_casa = 		'".$_POST['edittitulo_casa']."',
+														obs_casa = 			'".$_POST['editobs_casa']."',
+														iptu_casa = 		'".$_POST['editiptu_casa']."',
+														cd_endereco = 		'".$_POST['editendereco_casa']."',
+														status_casa = = 	'".$_POST['editstatus_casa']."'
+														WHERE cd_pessoa = 	'".$_POST['editcd_casa']."'";
 														if(mysqli_query($conn, $query)){
 															echo "<script>window.alert('Cadastro Atualizado com sucesso!');</script>";
 															
@@ -285,7 +288,7 @@
 														echo ' <div class="kt-portlet__head">';
 														echo ' <div class="kt-portlet__head-label">';
 														echo ' <h3 class="kt-portlet__head-title">Informações Pessoais</h3>';
-														echo ' </div>															';
+														echo ' </div>';
 														echo ' </div>';
 														echo ' <div class="kt-form kt-form--label-right">';
 
@@ -293,95 +296,95 @@
 														echo ' <div class="kt-portlet__body">';
 														echo ' <div class="kt-section kt-section--first">';
 														echo ' <div class="kt-section__body">';
+														
+														//SELECT CONCAT(p.pnome_pessoa, " ", p.snome_pessoa) AS nm_anfitriao, c.* FROM tb_casa c JOIN tb_pessoa p ON p.cd_pessoa = c.cd_anfitriao WHERE c.cd_casa = '1';
 
-
-														$query = "SELECT * FROM tb_pessoa WHERE cd_pessoa = '".$_SESSION['cd_pessoa']."'";
+														$query = "SELECT CONCAT(p.pnome_pessoa, ' ', p.snome_pessoa) AS nm_anfitriao, CONCAT(cep_endereco, ' - ', logradouro_endereco,', ', bairro_endereco,', ', complemento_endereco,', ', municipio_endereco,', ', estado_endereco,', (', pais_endereco, ') ') as full_endereco, E.cep_endereco, c.*  FROM tb_endereco E, tb_casa c JOIN tb_pessoa p ON p.cd_pessoa = c.cd_anfitriao WHERE c.cd_casa = '".$_SESSION['cd_casa']."' AND C.cd_endereco = E.cd_endereco;";
+														//$query = "SELECT CONCAT(P.pnome_pessoa, ' ', P.snome_pessoa) AS nm_anfitriao, E.*, C.* FROM tb_casa C, tb_endereco E JOIN tb_pessoa P ON P.cd_pessoa = C.cd_anfitriao WHERE C.CD_ENDERECO = E.CD_ENDERECO AND C.cd_casa = '".$_SESSION['cd_casa']."'";
 														$result = mysqli_query($conn, $query);
 														$row = mysqli_fetch_assoc($result);
 														// Exibe as informações do usuário no formulário
 														if($row) {
-															echo ' <div class="form-group row" style="display: none;">';
-															echo ' <label class="col-xl-3 col-lg-3 col-form-label">CD</label>';
+															echo ' <div class="form-group row" style="display: block;">';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Alertas</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="tel" name="editcd_pessoa" id="editcd_pessoa" class="form-control" value="'.$row['cd_pessoa'].'" readonly/>																				';
+															echo ' <input type="tel" name="editcd_casa" id="editcd_casa" class="form-control" value="CD: '.$row['cd_casa'].'. Status da Casa: '.$row['status_casa'].'" readonly/>																				';
 															echo ' </div>';
 															echo ' </div>';
 
-															//echo '<label for="imagem-preview-pessoa"></label>';
-                											//echo "<div class='card' style='max-width: 100%; max-height: 50vh;'>";
-                											//$caminho_pasta_pessoa = "../web/imagens/pessoas/".$_SESSION['cd_pessoa']."//";
-                											//$foto_pessoa = "1-foto.jpg"; // Nome do arquivo que será salvo
-                											//$caminho_foto_pessoa = $caminho_pasta_pessoa . $foto_pessoa;
-																									//
-                											//if (file_exists($caminho_foto_pessoa)) {
-                											//  $tipo_foto_pessoa = mime_content_type($caminho_foto_pessoa);
-                											//  echo "<img class='card-img-top img-thumbnail mx-auto' id='imagem-preview-pessoa' style='width: 200px; height: 200px;' src='data:$tipo_foto_pessoa;base64," . base64_encode(file_get_contents($caminho_foto_pessoa)) . "' alt='Imagem'>"; 
-                											//}
-														//
-                											//echo '<div class="card-body text-center">';
-                											//echo '<label for="fotoPessoa" class="btn btn-block btn-lg btn-outline-success">';
-                											//echo '<i class="bi bi-paperclip"></i> Escolher arquivo';
-                											//echo '<input type="file" name="fotoPessoa" id="fotoPessoa" style="display: none;">';
-                											//echo '</label>';
-                											//echo '</div>';
-                											//echo '</div>';
 
-
-                ?>
-                <script>
-                    const imagemInputPessoa = document.getElementById('fotoPessoa');
-                    const imagemPreviewPessoa = document.getElementById('imagem-preview-pessoa');
-
-                    imagemInputPessoa.addEventListener('change', function(event) {
-                        const arquivo = event.target.files[0];
-                        if (arquivo) {
-                            const leitor = new FileReader();
-                            leitor.onload = function(e) {
-                                imagemPreviewPessoa.src = e.target.result;
-                            }
-                            leitor.readAsDataURL(arquivo);
-                        } else {
-                            imagemPreviewPessoa.src = '#';
-                        }
-                    });
-                </script>
-        
-                <?php
 
 															echo ' <div class="form-group row">';
-															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Nome</label>';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Status da Casa: '.$row['cd_endereco'].'</label>';
+															echo ' </div>';
+
+															echo ' <div class="form-group row">';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Anfitrião</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editpnome_pessoa" id="editpnome_pessoa" value = "'.$row['pnome_pessoa'].'" class="form-control" />																				';
+															echo ' <input type="text" name="editanfitriao_casa" id="editanfitriao_casa" value = "'.$row['nm_anfitriao'].'" class="form-control" readonly/>																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
-															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Sobrenome</label>';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Título</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editsnome_pessoa" id="editsnome_pessoa" value = "'.$row['snome_pessoa'].'" class="form-control" />																				';
+															echo ' <input type="text" name="edittitulo_casa" id="edittitulo_casa" value = "'.$row['titulo_casa'].'" class="form-control" />																				';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
-															echo ' <label class="col-xl-3 col-lg-3 col-form-label">CPF</label>';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Obs</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editcpf_pessoa" id="editcpf_pessoa" class="form-control" value = "'.$row['cpf_pessoa'].'" readonly/>																				';
+															echo ' <input type="text" name="editobs_casa" id="editobs_casa" class="form-control" value = "'.$row['obs_casa'].'" />';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
-															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Data de Nascimento</label>';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">IPTU</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="date" name="editdtnasc_pessoa" id="editdtnasc_pessoa" class="form-control" value = "'.$row['dtnasc_pessoa'].'" readonly/>																				';
+															echo ' <input type="text" name="editiptu_casa" id="editiptu_casa" class="form-control" value = "'.$row['iptu_casa'].'"/>';
 															echo ' </div>';
 															echo ' </div>';
 
 															echo ' <div class="form-group row">';
-															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Observações</label>';
+															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Endereço</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
-															echo ' <input type="text" name="editobs_pessoa" id="editobs_pessoa" value = "'.$row['obs_pessoa'].'" class="form-control" />																				';
+															echo ' <input type="text" name="editendereco_casa" id="editendereco_casa" value = "'.$row['cd_endereco'].'" class="form-control" />';
+															echo ' <input type="text" name="editendereco_casa" id="editendereco_casa" value = "'.$row['cd_endereco'].'" class="form-control" />';
+															echo '<p style="color:#aaa;">'.$row['full_endereco'].'</p>';
 															echo ' </div>';
-															echo ' </div>';			
+															echo ' </div>';
+
+
+															//if(isset($_POST['concpf_pessoal'])) {
+                    									// Consulta o usuário pelo CPF
+													    $query_endereco = "SELECT * FROM tb_endereco";
+													    $result_endereco = mysqli_query($conn, $query_endereco);
+													    $row_endereco = mysqli_fetch_assoc($result_endereco);
+												        // Exibe as informações do usuário no formulário
+											            if($row_endereco) {
+												        	echo '<script>document.getElementById("editcd_endereco").value = "'.$row_endereco['cd_endereco'].'"</script>';
+												            //$sql_estilo = "SELECT * FROM tb_estilo";
+															$sql_estilo = "SELECT * FROM tb_estilo ORDER BY CASE WHEN cd_estilo = '".$row_endereco['cd_estilo']."' THEN 0 ELSE 1 END, cd_estilo;";
+															$resulta_endereco = $conn->query($sql_endereco);
+
+															if ($resulta_estilo->num_rows > 0){
+																echo ' <label class="col-xl-3 col-lg-3 col-form-label">Tema do Sistema</label>';
+																echo ' <div class="col-lg-9 col-xl-6">';
+																echo ' <select name="editcd_estilo" id="editcd_estilo" class="form-control">';
+																//echo ' <option value="">Selecione Tema</option>';
+																while ( $row_estilo = $resulta_estilo->fetch_assoc()){
+																	echo ' <option value="'.$row_estilo['cd_estilo'].'">'.$row_estilo['titulo_estilo'].'</option>';
+																}
+																echo ' </select>';
+																echo ' </div>';
+															}
+
+															echo '<script>document.getElementById("editcd_seg").value = "'.$row_rel_user['cd_seg'].'"</script>';
+															
+														}
+
+
 														}
 														
 														echo ' </div>';
