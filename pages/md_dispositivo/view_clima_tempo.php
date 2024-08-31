@@ -158,7 +158,7 @@ if (isset($_SESSION['casa'])) {
                         </div>
                       </div>
                     </div>
-                  <!--</div>-->';
+                  </div>';
               //echo '</div>';
 
             // Consultar dados do banco de dados
