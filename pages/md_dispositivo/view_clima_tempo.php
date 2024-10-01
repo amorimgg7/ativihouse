@@ -154,25 +154,7 @@ if (isset($_SESSION['casa'])) {
                       </div>
                     </div>
                   </div>';
-              //echo '</div>';
-
-            // Consultar dados do banco de dados
-            /*
-            $sql_clima_tempo_1H = "SELECT 
-                DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:%i:00') AS minuto,
-                ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
-                ROUND(AVG(umidade_clima_tempo), 2) AS media_umidade
-            FROM 
-                clima_tempo
-            WHERE 
-                mac_dispositivo_clima_tempo = '" . $Higrometro_1_0['mac_dispositivo'] . "' 
-                AND dt_clima_tempo >= NOW() - INTERVAL 1 HOUR
-            GROUP BY 
-                DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:%i:00')
-            ORDER BY 
-                minuto DESC
-            LIMIT 60;";
-*/
+              
             $sql_clima_tempo_24H = "SELECT 
                                     DATE_FORMAT(dt_clima_tempo, '%H:%i') AS hora,
                                     ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
@@ -188,21 +170,11 @@ if (isset($_SESSION['casa'])) {
                                     hora DESC
                                 LIMIT 24";
 
-            //$resulta_clima_tempo_1H = $conn->query($sql_clima_tempo_1H);
             $resulta_clima_tempo_24H = $conn->query($sql_clima_tempo_24H);
-
-            //$temperaturas_1H = [];
-            //$umidades_1H = [];
             $temperaturas_24H = [];
             $umidades_24H = [];
-/*
-            if ($resulta_clima_tempo_1H->num_rows > 0) {
-                while ($clima_tempo_1H = $resulta_clima_tempo_1H->fetch_assoc()) {
-                    $temperaturas_1H[] = $clima_tempo_1H["media_temperatura"];
-                    $umidades_1H[] = $clima_tempo_1H["media_umidade"];
-                }
-            }
-*/
+            $hora_24H = [];
+
             if ($resulta_clima_tempo_24H->num_rows > 0) {
                 while ($clima_tempo_24H = $resulta_clima_tempo_24H->fetch_assoc()) {
                     $temperaturas_24H[] = $clima_tempo_24H["media_temperatura"];
@@ -272,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     var humidityDataset_24H = {
-        label: temperaturas_24H[0],
+        label: umidades_24H[0],
         data: umidades_24H,
         borderColor: 'rgba(255, 159, 64, 1)',
         borderWidth: 1,
@@ -282,6 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Gráfico de linha para as últimas 24 horas
+    $counter = 0;
     var ctxLine_24H = document.getElementById('lineChart_24H_<?php echo $counter; ?>').getContext('2d');
     createChart(ctxLine_24H, 'line', labels_hora, [temperatureDataset_24H, humidityDataset_24H]);
 });
