@@ -147,7 +147,7 @@ if (isset($_SESSION['casa'])) {
             echo '<!--<div class="row mb-3 shadow-lg bg-secondary" style="margin: 0px;">-->
                     <div class="col-sm-6 col-lg-6 grid-margin stretch-card">
                       <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" style="padding:0; margin:0;">
                           
                           <canvas id="lineChart_24H_' . $counter . '"></canvas>
                         </div>
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Configuração dos datasets para as últimas 24 horas
     var temperatureDataset_24H = {
-        label: 'Temperatura ('+temperaturas_24H[0]+')',
+        label: temperaturas_24H[0],
         data: temperaturas_24H,
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     var humidityDataset_24H = {
-        label: 'Umidade ('+temperaturas_24H[0]+')',
+        label: temperaturas_24H[0],
         data: umidades_24H,
         borderColor: 'rgba(255, 159, 64, 1)',
         borderWidth: 1,
