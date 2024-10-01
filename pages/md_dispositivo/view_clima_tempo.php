@@ -80,11 +80,7 @@ if (isset($_SESSION['casa'])) {
             $dataAtual = time();
 
             if (($dataAtual - $dataStatus) > 10) {
-                // A data e hora são maiores que 30 segundos
-                //echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px; max-width: 18rem;">';
-
                 echo '<div class="card text-white border-danger mb-3 shadow-lg bg-secondary align-items-center" style="margin: 10px;">';
-
                 if($_SESSION['md_edicao_hw'] == 0){
                     echo '<div class="card-header bg-danger">Offline';
                 }else if($_SESSION['md_edicao_hw'] == 1){
@@ -92,7 +88,6 @@ if (isset($_SESSION['casa'])) {
                 }else if($_SESSION['md_edicao_hw'] == 2){
                     echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
                     echo '<input type="text" value="'.$Higrometro_1_0['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
-                    //echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['cd_dispositivo'].' - '.$Higrometro_1_0['mac_dispositivo'].'"></div>'; 
                     echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].'"></div>'; 
                     echo '</form>';
                 }
@@ -153,7 +148,7 @@ if (isset($_SESSION['casa'])) {
                     <div class="col-sm-6 col-lg-6 grid-margin stretch-card">
                       <div class="card">
                         <div class="card-body">
-                          <h4 class="card-title">Últimas 24 Horas</h4>
+                          
                           <canvas id="lineChart_24H_' . $counter . '"></canvas>
                         </div>
                       </div>
@@ -179,7 +174,7 @@ if (isset($_SESSION['casa'])) {
             LIMIT 60;";
 */
             $sql_clima_tempo_24H = "SELECT 
-                                    DATE_FORMAT(dt_clima_tempo, '%Y-%m-%d %H:00:00') AS hora,
+                                    DATE_FORMAT(dt_clima_tempo, '%H:%i') AS hora,
                                     ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
                                     ROUND(AVG(umidade_clima_tempo), 2) AS media_umidade
                                 FROM 
@@ -212,13 +207,91 @@ if (isset($_SESSION['casa'])) {
                 while ($clima_tempo_24H = $resulta_clima_tempo_24H->fetch_assoc()) {
                     $temperaturas_24H[] = $clima_tempo_24H["media_temperatura"];
                     $umidades_24H[] = $clima_tempo_24H["media_umidade"];
+                    $hora_24H[] = $clima_tempo_24H["hora"];
                 }
             }
 
 ?>
             <script>
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Função para criar gráficos
+    function createChart(ctx, type, labels, datasets) {
+        // Calcula o valor mínimo e máximo dos dados
+        var allData = [].concat(...datasets.map(dataset => dataset.data));
+        var minY = Math.min(...allData);
+        var maxY = Math.max(...allData);
+
+        return new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: minY-2, // Define o mínimo do eixo Y
+                        max: maxY+2, // Define o máximo do eixo Y
+                        ticks: {
+                            // Opção para não incluir o zero
+                            callback: function(value) {
+                                return value !== 0 ? value : '';
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Ultimas 24 horas. Retroativo.'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Dados fornecidos pelo PHP para as últimas 24 horas
+    var temperaturas_24H = <?php echo json_encode($temperaturas_24H); ?>;
+    var umidades_24H = <?php echo json_encode($umidades_24H); ?>;
+    var labels_hora = <?php echo json_encode($hora_24H); ?>; // Adiciona as horas como rótulos do eixo X
+
+    // Configuração dos datasets para as últimas 24 horas
+    var temperatureDataset_24H = {
+        label: 'Temperatura ('+temperaturas_24H[0]+')',
+        data: temperaturas_24H,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 5,
+        pointHoverRadius: 7
+    };
+
+    var humidityDataset_24H = {
+        label: 'Umidade ('+temperaturas_24H[0]+')',
+        data: umidades_24H,
+        borderColor: 'rgba(255, 159, 64, 1)',
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 5,
+        pointHoverRadius: 7
+    };
+
+    // Gráfico de linha para as últimas 24 horas
+    var ctxLine_24H = document.getElementById('lineChart_24H_<?php echo $counter; ?>').getContext('2d');
+    createChart(ctxLine_24H, 'line', labels_hora, [temperatureDataset_24H, humidityDataset_24H]);
+});
+
+
+/*
                 document.addEventListener('DOMContentLoaded', function () {
                     // Função para criar gráficos
+
+                    
                     function createChart(ctx, type, labels, datasets) {
                         return new Chart(ctx, {
                             type: type,
@@ -236,40 +309,71 @@ if (isset($_SESSION['casa'])) {
                         });
                     }
 
-                    // Dados fornecidos pelo PHP para a última hora
-                    //var temperaturas_1H = <?php //echo json_encode($temperaturas_1H); ?>;
-                    //var umidades_1H = <?php //echo json_encode($umidades_1H); ?>;
-                    //var labels_1H = Array.from({length: temperaturas_1H.length}, (_, i) => i + 1);
-
-                    // Configuração dos datasets para a última hora
-                    /*var temperatureDataset_1H = {
-                        label: 'Temperatura (Última Hora)',
-                        data: temperaturas_1H,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    };
-
-                    var humidityDataset_1H = {
-                        label: 'Umidade (Última Hora)',
-                        data: umidades_1H,
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    };
-*/
-                    // Gráfico de linha para a última hora
-                    //var ctxLine_1H = document.getElementById('lineChart_1H_<?php echo $counter; ?>').getContext('2d');
-                    //createChart(ctxLine_1H, 'line', labels_1H, [temperatureDataset_1H, humidityDataset_1H]);
-
                     // Dados fornecidos pelo PHP para as últimas 24 horas
-                    var temperaturas_24H = <?php echo json_encode($temperaturas_24H); ?>;
-                    var umidades_24H = <?php echo json_encode($umidades_24H); ?>;
+                    var temperaturas_24H = <?php //echo json_encode($temperaturas_24H); ?>;
+                    var umidades_24H = <?php //echo json_encode($umidades_24H); ?>;
                     var labels_24H = Array.from({length: temperaturas_24H.length}, (_, i) => i + 1);
 
                     // Configuração dos datasets para as últimas 24 horas
                     var temperatureDataset_24H = {
-                        label: 'Temperatura (Últimas 24 Horas)',
+                        label: 'Temperatura ('+temperaturas_24H+')',
+                        data: temperaturas_24H,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    };
+
+                    var humidityDataset_24H = {
+                        label: 'Umidade ('+umidades_24H+')',
+                        data: umidades_24H,
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    };
+
+                    // Gráfico de linha para as últimas 24 horas
+                    var ctxLine_24H = document.getElementById('lineChart_24H_<?php //echo $counter; ?>').getContext('2d');
+                    createChart(ctxLine_24H, 'line', labels_24H, [temperatureDataset_24H, humidityDataset_24H]);
+
+                    
+/*
+
+                    function createChart(ctx, type, labels, datasets) {
+                      return new Chart(ctx, {
+                          type: type,
+                          data: {
+                              labels: labels,
+                              datasets: datasets
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+                    }
+
+                    // Dados fornecidos pelo PHP para as últimas 24 horas
+                    var temperaturas_24H = <?php //echo json_encode($temperaturas_24H); ?>;
+                    var umidades_24H = <?php //echo json_encode($umidades_24H); ?>;
+                    var horas_24H = <?php //echo json_encode($horas_24H); ?>; // Adicione um array de horas lido do PHP
+
+                    // Defina labels_24H como o array de horas de leitura
+                    var labels_24H = horas_24H;
+
+                    // Pegue a última temperatura e umidade lidas
+                    var ultimaTemperatura = temperaturas_24H[temperaturas_24H.length - 1];
+                    var ultimaUmidade = umidades_24H[umidades_24H.length - 1];
+
+                    // Configuração dos datasets para as últimas 24 horas
+                    var temperatureDataset_24H = {
+                        label: 'Última Temperatura: ' + ultimaTemperatura + ' °C',
                         data: temperaturas_24H,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1,
@@ -277,7 +381,7 @@ if (isset($_SESSION['casa'])) {
                     };
 
                     var humidityDataset_24H = {
-                        label: 'Umidade (Últimas 24 Horas)',
+                        label: 'Última Umidade: ' + ultimaUmidade + ' %',
                         data: umidades_24H,
                         borderColor: 'rgba(255, 159, 64, 1)',
                         borderWidth: 1,
@@ -285,9 +389,10 @@ if (isset($_SESSION['casa'])) {
                     };
 
                     // Gráfico de linha para as últimas 24 horas
-                    var ctxLine_24H = document.getElementById('lineChart_24H_<?php echo $counter; ?>').getContext('2d');
+                    var ctxLine_24H = document.getElementById('lineChart_24H_<?php //echo $counter; ?>').getContext('2d');
                     createChart(ctxLine_24H, 'line', labels_24H, [temperatureDataset_24H, humidityDataset_24H]);
-                });
+*/
+                //});
             </script>
           <?php
                   }

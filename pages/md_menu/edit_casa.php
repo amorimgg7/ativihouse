@@ -350,39 +350,37 @@
 															echo ' <label class="col-xl-3 col-lg-3 col-form-label">Endereço</label>';
 															echo ' <div class="col-lg-9 col-xl-6">';
 															echo ' <input type="text" name="editendereco_casa" id="editendereco_casa" value = "'.$row['cd_endereco'].'" class="form-control" />';
-															echo ' <input type="text" name="editendereco_casa" id="editendereco_casa" value = "'.$row['cd_endereco'].'" class="form-control" />';
 															echo '<p style="color:#aaa;">'.$row['full_endereco'].'</p>';
 															echo ' </div>';
 															echo ' </div>';
 
 
-															//if(isset($_POST['concpf_pessoal'])) {
-                    									// Consulta o usuário pelo CPF
-													    $query_endereco = "SELECT * FROM tb_endereco";
-													    $result_endereco = mysqli_query($conn, $query_endereco);
-													    $row_endereco = mysqli_fetch_assoc($result_endereco);
-												        // Exibe as informações do usuário no formulário
-											            if($row_endereco) {
-												        	echo '<script>document.getElementById("editcd_endereco").value = "'.$row_endereco['cd_endereco'].'"</script>';
-												            //$sql_estilo = "SELECT * FROM tb_estilo";
-															$sql_estilo = "SELECT * FROM tb_estilo ORDER BY CASE WHEN cd_estilo = '".$row_endereco['cd_estilo']."' THEN 0 ELSE 1 END, cd_estilo;";
-															$resulta_endereco = $conn->query($sql_endereco);
+															
+													    	$query_endereco = "SELECT CONCAT(cep_endereco, ' - ', estado_endereco, ' - ', bairro_endereco, ' - ', logradouro_endereco) as full_endereco, cd_endereco FROM tb_endereco where cd_endereco = '".$row['cd_endereco']."'";
+													    	$result_endereco = mysqli_query($conn, $query_endereco);
+													    	$resulta_endereco = $conn->query($query_endereco);
+												        	// Exibe as informações do usuário no formulário
+											            	echo '<script>document.getElementById("editcd_endereco").value = "'.$row['cd_endereco'].'"</script>';
+												        	//$sql_estilo = "SELECT * FROM tb_estilo";
+															
 
-															if ($resulta_estilo->num_rows > 0){
-																echo ' <label class="col-xl-3 col-lg-3 col-form-label">Tema do Sistema</label>';
+															if ($result_endereco->num_rows > 0){
+																echo ' <div class="form-group row">';
+																echo ' <label class="col-xl-3 col-lg-3 col-form-label">Endereços cadastrados</label>';
 																echo ' <div class="col-lg-9 col-xl-6">';
 																echo ' <select name="editcd_estilo" id="editcd_estilo" class="form-control">';
-																//echo ' <option value="">Selecione Tema</option>';
-																while ( $row_estilo = $resulta_estilo->fetch_assoc()){
-																	echo ' <option value="'.$row_estilo['cd_estilo'].'">'.$row_estilo['titulo_estilo'].'</option>';
+																//echo ' <option value="">Selecione um Endereço</option>';
+																while ( $result_endereco = $result_endereco->fetch_assoc()){
+																	echo ' <option value="'.$result_endereco['cd_endereco'].'">'.$result_endereco['full_endereco'].'</option>';
 																}
 																echo ' </select>';
 																echo ' </div>';
+																echo ' </div>';
 															}
 
-															echo '<script>document.getElementById("editcd_seg").value = "'.$row_rel_user['cd_seg'].'"</script>';
+															//echo '<script>document.getElementById("editcd_seg").value = "'.$row_rel_user['cd_seg'].'"</script>';
 															
-														}
+														
 
 
 														}
