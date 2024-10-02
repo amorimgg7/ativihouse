@@ -207,8 +207,8 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 scales: {
                     y: {
-                        min: minY-2, // Define o mínimo do eixo Y
-                        max: maxY+2, // Define o máximo do eixo Y
+                        min: minY - 2, // Define o mínimo do eixo Y
+                        max: maxY + 2, // Define o máximo do eixo Y
                         ticks: {
                             // Opção para não incluir o zero
                             callback: function(value) {
@@ -219,7 +219,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     x: {
                         title: {
                             display: true,
-                            text: 'Ultimas 24 horas. Retroativo.'
+                            text: 'Últimas 24 horas. Retroativo.'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var datasetLabel = tooltipItem.dataset.label || '';
+                                var dataPoint = tooltipItem.raw;
+                                if (datasetLabel === 'Temperatura') {
+                                    return datasetLabel + ': ' + dataPoint + ' °C'; // Ajuste a unidade conforme necessário
+                                } else if (datasetLabel === 'Umidade') {
+                                    return datasetLabel + ': ' + dataPoint + ' %'; // Ajuste a unidade conforme necessário
+                                }
+                                return '';
+                            }
                         }
                     }
                 }
@@ -234,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Configuração dos datasets para as últimas 24 horas
     var temperatureDataset_24H = {
-        label: temperaturas_24H[0],
+        label: /*temperaturas_24H[0]+*/"°C",
         data: temperaturas_24H,
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
@@ -244,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     var humidityDataset_24H = {
-        label: umidades_24H[0],
+        label: /*umidades_24H[0] + */'%',
         data: umidades_24H,
         borderColor: 'rgba(255, 159, 64, 1)',
         borderWidth: 1,
@@ -254,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Gráfico de linha para as últimas 24 horas
-    $counter = 0;
+    var counter = 0; // Use 'var' para a variável
     var ctxLine_24H = document.getElementById('lineChart_24H_<?php echo $counter; ?>').getContext('2d');
     createChart(ctxLine_24H, 'line', labels_hora, [temperatureDataset_24H, humidityDataset_24H]);
 });
