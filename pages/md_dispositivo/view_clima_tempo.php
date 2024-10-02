@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Configuração dos datasets para as últimas 24 horas
     var temperatureDataset_24H = {
-        label: /*temperaturas_24H[0]+*/"°C",
+        label: 'Temperatura',
         data: temperaturas_24H,
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     var humidityDataset_24H = {
-        label: /*umidades_24H[0] + */'%',
+        label: 'Umidade',
         data: umidades_24H,
         borderColor: 'rgba(255, 159, 64, 1)',
         borderWidth: 1,
