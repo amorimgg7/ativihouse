@@ -155,6 +155,7 @@ if (isset($_SESSION['casa'])) {
                     </div>
                   </div>';
               
+                  /*
             $sql_clima_tempo_24H = "SELECT 
                                     DATE_FORMAT(dt_clima_tempo, '%H:%i') AS hora,
                                     ROUND(AVG(temperatura_clima_tempo), 2) AS media_temperatura,
@@ -169,6 +170,21 @@ if (isset($_SESSION['casa'])) {
                                 ORDER BY 
                                     hora DESC
                                 LIMIT 24";
+                                */
+
+
+                                $sql_clima_tempo_24H = "SELECT 
+                                        DATE_FORMAT(clima_tempo.dt_clima_tempo, '%Y-%m-%d %H:00:00') AS hora_leitura,
+                                        DATE_FORMAT(clima_tempo.dt_clima_tempo, '%H:00') AS hora,
+                                        ROUND(AVG(clima_tempo.temperatura_clima_tempo), 2) AS media_temperatura,
+                                        ROUND(AVG(clima_tempo.umidade_clima_tempo), 2) AS media_umidade,
+                                        COUNT(*) AS quantidade_leituras
+                                    FROM clima_tempo
+                                    WHERE clima_tempo.dt_clima_tempo >= NOW() - INTERVAL 24 HOUR
+                                      AND clima_tempo.dt_clima_tempo <= NOW()
+                                      AND mac_dispositivo_clima_tempo = '" . $Higrometro_1_0['mac_dispositivo'] . "'
+                                    GROUP BY DATE_FORMAT(clima_tempo.dt_clima_tempo, '%Y-%m-%d %H')
+                                    ORDER BY hora_leitura ASC;";
 
             $resulta_clima_tempo_24H = $conn->query($sql_clima_tempo_24H);
             $temperaturas_24H = [];
