@@ -184,7 +184,7 @@ if (isset($_SESSION['casa'])) {
                                       AND clima_tempo.dt_clima_tempo <= NOW()
                                       AND mac_dispositivo_clima_tempo = '" . $Higrometro_1_0['mac_dispositivo'] . "'
                                     GROUP BY DATE_FORMAT(clima_tempo.dt_clima_tempo, '%Y-%m-%d %H')
-                                    ORDER BY hora_leitura ASC;";
+                                    ORDER BY hora_leitura DESC;";
 
             $resulta_clima_tempo_24H = $conn->query($sql_clima_tempo_24H);
             $temperaturas_24H = [];
