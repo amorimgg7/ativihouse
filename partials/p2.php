@@ -9,6 +9,8 @@
 
 
 <?php
+if(isset($_SESSION['cd_casa']) && $_SESSION['cd_casa'] > 0){
+
     echo '<p>Atualizado em: '.date("d/m/Y H:i:s").' !</p>';
     $count = 0;
     $sql_Higrometro_1_0 = "SELECT * FROM tb_dispositivo where modelo_dispositivo = 'Higrometro_1_0' AND cd_casa_dispositivo = ".$_SESSION['cd_casa']." ";
@@ -122,6 +124,10 @@
             echo '</div>'; // Fecha a última div se não for múltiplo de 3
         }
     }
+
+
+}
+    
 ?>
                 
               

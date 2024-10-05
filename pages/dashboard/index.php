@@ -12,7 +12,14 @@
   }
   require_once '../../classes/conn.php';
   include("../../classes/functions.php");
-  $u = new Usuario;    
+  $u = new Usuario;  
+  
+  
+
+
+  
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
