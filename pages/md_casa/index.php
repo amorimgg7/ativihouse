@@ -34,17 +34,18 @@ if(isset($_POST['bt_casa_selecionada'])){
                     }
                   }
                   if ($resulta_casa->num_rows > 1){
-                    while ( $casas = $resulta_casa->fetch_assoc()){
+                    echo '<div class="row">';
+                    while ( $casas = $resulta_casa->fetch_assoc()){  
                       if($casas['status_casa'] == '0'){
+                        echo '<div class="col-md-6">';
+                        echo '<div class="card mb-3 border-success shadow-sm align-items-center" id="casa_'.$casas['cd_casa'].'">';
+                        //echo '<div class="card-header bg-success" style="width: 100%; text-align:center;">Livre - '.$_SESSION['cd_casa_selecionada'].'</div>';
                         echo '<form method="POST">';
                         echo '<input type="text" value="'.$casas['cd_casa'].'" id="cd_casa_selecionada" name="cd_casa_selecionada" style="display:none;">';
 
-                        echo '<div class="card mb-3 border-success shadow-sm align-items-center" id="casa_'.$casas['cd_casa'].'">';
-                        //echo '<div class="card-header bg-success" style="width: 100%; text-align:center;">Livre - '.$_SESSION['cd_casa_selecionada'].'</div>';
-                      
                         
                         
-                        echo '<div class="card-header bg-success" style="width: 100%; text-align:center;"><input class="btn btn-block btn-success" type="submit" id="bt_casa_selecionada" name="bt_casa_selecionada" value="'.$casas['titulo_casa'].'"></div>'; 
+                        echo '<div class="card-header bg-success" style="width: 100%; text-align:center;"><input class="btn btn-block btn-success" type="submit" id="bt_casa_selecionada" name="bt_casa_selecionada" value="Clique aqui - '.$casas['titulo_casa'].'"></div>'; 
                         echo '</form>'; 
 
 
@@ -71,7 +72,7 @@ if(isset($_POST['bt_casa_selecionada'])){
                       $resulta_dispositivo = $conn->query($sql_dispositivo);
                       if ($resulta_dispositivo->num_rows > 0) {
                         while ($dispositivo = $resulta_dispositivo->fetch_assoc()) {
-                          echo '<p style="text-align: center;"> ';
+                          //echo '<p style="text-align: center;"> ';
                           $dataStatus = strtotime($dispositivo['dt_status_dispositivo']);
                           $dataAtual = time();
                           if (($dataAtual - $dataStatus) > 10) {
@@ -87,11 +88,13 @@ if(isset($_POST['bt_casa_selecionada'])){
                               echo ' <i style="color: #0D0;" class="icon-record"></i>';
                             }
                           }
-                          echo ' </p>';
+                          //echo ' </p>';
                         }
                       }
                       echo '</div>';
                       echo '</div>';
+                      echo '</div>';
+                      
 
                       
                       
@@ -141,7 +144,7 @@ if(isset($_POST['bt_casa_selecionada'])){
                     }
 
 
-                    
+                    echo '</div>';
 
                         
                   }
