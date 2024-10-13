@@ -110,6 +110,22 @@
                     
                     
                 }
+
+                if($row_dispositivo['canal_8'] != $canal_8){
+                    $update = "UPDATE tb_dispositivo SET 
+                        dt_status_dispositivo   =   '".$data_hora."',
+                        status_dispositivo      =   'Manual',
+                        canal_8                 =   '".$canal_8."'
+                    WHERE mac_dispositivo       =   '".$mac."'";
+                    if(mysqli_query($conn, $update)){                    
+                        echo ' <p>canal_2 editado</p> ';
+                        $alterado = 1;
+                    }
+                    
+                    
+                }
+
+
                 if($alterado == 0){
                     $update = "UPDATE tb_dispositivo SET 
                         dt_status_dispositivo   = '".$data_hora."',

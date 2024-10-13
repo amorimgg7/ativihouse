@@ -88,7 +88,7 @@ if (isset($_SESSION['casa'])) {
                 }else if($_SESSION['md_edicao_hw'] == 2){
                     echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
                     echo '<input type="text" value="'.$Higrometro_1_0['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
-                    echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].'"></div>'; 
+                    echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].' - '.$Higrometro_1_0['cd_dispositivo'].'V"></div>'; 
                     echo '</form>';
                 }
                     
@@ -104,7 +104,7 @@ if (isset($_SESSION['casa'])) {
                     echo '<form method="post" action="'.$_SESSION['dominio'].'/pages/md_dispositivo/edit_dispositivo.php">';
                     echo '<input type="text" value="'.$Higrometro_1_0['cd_dispositivo'].'" id="concd_dispositivo" name="concd_dispositivo" style="display:none;">';
                     //echo '<div class="card-header bg-danger"><input class="btn btn-block btn-danger" type="submit" value="'.$Higrometro_1_0['cd_dispositivo'].' - '.$Higrometro_1_0['mac_dispositivo'].'"></div>'; 
-                    echo '<div class="card-header bg-success"><input class="btn btn-block btn-success" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].'"></div>'; 
+                    echo '<div class="card-header bg-success"><input class="btn btn-block btn-success" type="submit" value="'.$Higrometro_1_0['local_dispositivo'].' - '.$Higrometro_1_0['canal_8'].'V"></div>'; 
                     echo '</form>';
                 }
                 /*
