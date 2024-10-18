@@ -37,6 +37,59 @@ if(isset($_SESSION['cd_casa']) && $_SESSION['cd_casa'] > 0){
         echo '<div class="card-footer text-muted">';
         echo '</div>';
         echo '</div>';
+
+        $sql_casa = "SELECT * FROM tb_dispositivo where modelo_dispositivo = 'Higrometro_1_0' AND cd_casa_dispositivo = ".$_SESSION['cd_casa']." ";
+        $resulta_casa = $conn->query($sql_casa);
+        if ($resulta_casa->num_rows > 0) {
+            while ($casas = $resulta_casa->fetch_assoc()) {
+                if ($count % 6 == 0) {
+                    if ($count > 0) {
+                        echo '</div>'; // Fecha a div anterior, exceto na primeira iteração
+                    }
+                    echo '<div class="card-deck justify-content-center">';
+                }
+                if (isset($casas['dt_status_dispositivo'])) {
+                    $dataStatus = strtotime($casas['dt_status_dispositivo']);
+                    $dataAtual = time();
+                    if (($dataAtual - $dataStatus) > 10) {
+                        // A data e hora são maiores que 30 segundos
+                        echo '<div class="card text-white border-danger mb-3 shadow-lg d-inline-block bg-secondary align-items-center" style="margin: 5px; max-width: 7rem;">';
+                        if($_SESSION['md_edicao_hw'] == 0){
+                            echo '<div class="card-header"><i style="color: #D00;" class="icon-thermometer"></i><i style="color: #D00;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                        }else if($_SESSION['md_edicao_hw'] == 1){
+                            echo '<div class="card-header"><i style="color: #D00;" class="icon-thermometer"></i><i style="color: #D00;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                        }else if($_SESSION['md_edicao_hw'] == 2){
+                            echo '<div class="card-header"><i style="color: #D00;" class="icon-thermometer"></i><i style="color: #D00;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                        }
+                    } else {
+                        // A data e hora não são maiores que 30 segundos
+                        echo '<div class="card text-white border-success mb-3 shadow-lg  d-inline-block bg-secondary align-items-center" style="margin: 5px; max-width: 8rem;">';
+                        if($_SESSION['md_edicao_hw'] == 0){
+                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                        }else if($_SESSION['md_edicao_hw'] == 1){
+                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                        }else if($_SESSION['md_edicao_hw'] == 2){
+                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                        }
+                        echo '<div class="card-body">';
+                        echo '<h5 class="card-title"><i style="color: #000;" class="icon-thermometer"></i> '.$casas['canal_1'].'</h5>';
+                        echo '<h5 class="card-title"><i style="color: #000;" class="icon-drop"></i> '.$casas['canal_2'].'</h5>';
+                        echo '</div>';
+                        echo '<div class="card-footer text-muted">';
+                        echo '</div>';
+                    }
+                }
+                
+                
+                echo '</div>';
+                $count++;
+            }
+            if ($count % 6 != 0) {
+                echo '</div>'; // Fecha a última div se não for múltiplo de 3
+            }
+        }
+
+
     }
     $sql_casa = "SELECT * FROM tb_dispositivo where modelo_dispositivo != 'Higrometro_1_0' AND cd_casa_dispositivo = ".$_SESSION['cd_casa']." ";
     $resulta_casa = $conn->query($sql_casa);
