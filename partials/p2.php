@@ -64,12 +64,14 @@ if(isset($_SESSION['cd_casa']) && $_SESSION['cd_casa'] > 0){
                     } else {
                         // A data e hora não são maiores que 30 segundos
                         echo '<div class="card text-white border-success mb-3 shadow-lg  d-inline-block bg-secondary align-items-center" style="margin: 5px; max-width: 8rem;">';
+                        $vin = round($casas['canal_8']);  // Tensão medida
+                        $batPercent = round(($vin / 3.5) * 100);
                         if($_SESSION['md_edicao_hw'] == 0){
-                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$batPercent.'% '.$vin.'V</i></div>';
                         }else if($_SESSION['md_edicao_hw'] == 1){
-                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$batPercent.'% '.$vin.'V</i></div>';
                         }else if($_SESSION['md_edicao_hw'] == 2){
-                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$casas['canal_8'].'%</i></div>';
+                            echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$batPercent.'% '.$vin.'V</i></div>';
                         }
                         echo '<div class="card-body">';
                         echo '<h5 class="card-title"><i style="color: #000;" class="icon-thermometer"></i> '.$casas['canal_1'].'</h5>';
