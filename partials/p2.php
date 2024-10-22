@@ -51,7 +51,7 @@ if(isset($_SESSION['cd_casa']) && $_SESSION['cd_casa'] > 0){
                 if (isset($casas['dt_status_dispositivo'])) {
                     $dataStatus = strtotime($casas['dt_status_dispositivo']);
                     $dataAtual = time();
-                    if (($dataAtual - $dataStatus) > 10) {
+                    if (($dataAtual - $dataStatus) > 1000000) {
                         // A data e hora são maiores que 30 segundos
                         echo '<div class="card text-white border-danger mb-3 shadow-lg d-inline-block bg-secondary align-items-center" style="margin: 5px; max-width: 7rem;">';
                         if($_SESSION['md_edicao_hw'] == 0){
@@ -64,7 +64,7 @@ if(isset($_SESSION['cd_casa']) && $_SESSION['cd_casa'] > 0){
                     } else {
                         // A data e hora não são maiores que 30 segundos
                         echo '<div class="card text-white border-success mb-3 shadow-lg  d-inline-block bg-secondary align-items-center" style="margin: 5px; max-width: 8rem;">';
-                        $vin = round($casas['canal_8']);  // Tensão medida
+                        $vin = $casas['canal_8'];  // Tensão medida
                         $batPercent = round(($vin / 3.5) * 100);
                         if($_SESSION['md_edicao_hw'] == 0){
                             echo '<div class="card-header"><i style="color: #0D0;" class="icon-battery"> '.$batPercent.'% '.$vin.'V</i></div>';
